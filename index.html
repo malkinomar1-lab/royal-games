@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة الألعاب الشاملة الفاخرة | Royal Games Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: radial-gradient(circle at top, #1e1b4b 0%, #090d16 70%); color: #f8fafc; min-height: 100vh; overflow-x: hidden; margin: 0; padding-bottom: 84px; touch-action: manipulation; }
+        button, [role="button"], .game-card-item { cursor: pointer; touch-action: manipulation; user-select: none; }
+        .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.25rem; }
+        .gold-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: #090d16; font-weight: 900; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35); transition: transform 0.15s; cursor: pointer; }
+        .gold-btn:active { transform: scale(0.96); }
+        .chess-board-wrap { width: 100%; max-width: 380px; aspect-ratio: 1 / 1; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); border: 3px solid #d97706; border-radius: 0.75rem; overflow: hidden; margin: 0 auto; box-shadow: 0 12px 30px rgba(0,0,0,0.6); }
+        .chess-sq { display: flex; align-items: center; justify-content: center; font-size: clamp(1.35rem, 6.2vw, 2rem); user-select: none; cursor: pointer; position: relative; }
+        .sq-light { background: #e2e8f0; }
+        .sq-dark { background: #475569; }
+        .sq-sel { outline: 3px solid #f59e0b; outline-offset: -3px; background: rgba(245, 158, 11, 0.45) !important; }
+        .sq-hint::after { content: ''; width: 32%; height: 32%; border-radius: 50%; background: rgba(16, 185, 129, 0.75); }
+        .piece-w { color: #ffffff; text-shadow: 0 2px 3px #000, 0 0 2px #000; }
+        .piece-b { color: #0f172a; text-shadow: 0 1px 2px rgba(255,255,255,0.85); }
+        .c4-grid { width: 100%; max-width: 370px; aspect-ratio: 7 / 6; display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #1d4ed8; padding: 8px; border-radius: 1rem; border: 3px solid #60a5fa; margin: 0 auto; }
+        .c4-cell { background: #090d16; border-radius: 50%; aspect-ratio: 1 / 1; cursor: pointer; box-shadow: inset 0 3px 6px rgba(0,0,0,0.8); transition: background 0.2s; }
+        .c4-p1 { background: radial-gradient(circle at 30% 30%, #fde047, #eab308); }
+        .c4-p2 { background: radial-gradient(circle at 30% 30%, #f87171, #dc2626); }
+        .xo-grid { width: 100%; max-width: 310px; aspect-ratio: 1 / 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0 auto; }
+        .xo-cell { background: rgba(30, 41, 59, 0.9); border: 2px solid rgba(255,255,255,0.12); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 2.6rem; font-weight: 900; cursor: pointer; aspect-ratio: 1 / 1; }
+        .rarity-common { border-color: #64748b; }
+        .rarity-rare { border-color: #38bdf8; }
+        .rarity-epic { border-color: #c084fc; }
+        .rarity-legendary { border-color: #f59e0b; }
+        .rarity-bloody { border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.35); }
+        @keyframes pulseTurn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        .turn-active { animation: pulseTurn 1.5s infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-white/10 px-3 py-2.5">
+        <div class="max-w-lg mx-auto flex items-center justify-between gap-2">
+            <div role="button" tabindex="0" class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('profile')">
+                <div id="header-avatar-wrap" class="w-10 h-10 rounded-full bg-slate-800 border-2 border-amber-400 flex items-center justify-center text-xl overflow-hidden shrink-0">
+                    <span id="header-avatar-emoji">👑</span>
+                    <img id="header-avatar-img" class="hidden w-full h-full object-cover" alt="avatar">
+                </div>
+                <div>
+                    <div class="flex items-center gap-1">
+                        <span id="header-name" class="text-xs font-black text-white">اللاعب الملكي</span>
+                        <span id="header-vip-badge" class="hidden text-[10px] bg-amber-400 text-slate-950 px-1.5 rounded font-black">VIP</span>
+                    </div>
+                    <div class="text-[10px] text-amber-300 font-bold">
+                        <span id="header-title">مبتدئ</span> • مستوى <span id="header-level">1</span>
+                        <span id="header-streak" class="hidden text-orange-400 mr-1">🔥0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5">
+                <div class="bg-slate-900 border border-amber-500/40 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-inner">
+                    <span class="text-sm">🪙</span>
+                    <span id="header-coins" class="text-xs font-black text-amber-400">1,000</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- إشعار عام -->
+    <div id="toast-msg" class="pointer-events-none fixed top-16 left-1/2 -translate-x-1/2 z-[120] hidden bg-slate-900/95 border border-amber-400/60 text-white px-4 py-2 rounded-full text-xs font-bold shadow-2xl whitespace-nowrap"></div>
+
+    <!-- إشعار دعوة تحدي فورية من صديق -->
+    <div id="incoming-invite-banner" class="hidden fixed top-14 inset-x-3 max-w-lg mx-auto z-[110] glass-card p-3 border-2 border-cyan-400 bg-slate-950/95 shadow-2xl flex items-center justify-between gap-2">
+        <div>
+            <div class="text-xs font-black text-cyan-300">⚔️ دعوة تحدي مباشر!</div>
+            <div id="incoming-invite-text" class="text-[11px] text-white font-bold">صديقك يدعوك للعب الآن</div>
+        </div>
+        <div class="flex gap-1.5">
+            <button type="button" onclick="declineIncomingInvite()" class="bg-slate-800 text-slate-300 px-2.5 py-1.5 rounded-xl text-xs font-bold">رفض</button>
+            <button type="button" onclick="acceptIncomingInvite()" class="bg-emerald-500 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-black">قبول ▶</button>
+        </div>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-lg mx-auto p-3 space-y-4">
+
+        <!-- 1. قسم الألعاب -->
+        <section id="tab-games" class="space-y-3">
+            <!-- شريط الحضور اليومي -->
+            <div class="glass-card p-3 flex items-center justify-between border-amber-500/30">
+                <div>
+                    <div class="text-xs font-black text-amber-300">🎁 مكافأة الحضور اليومي (يوم <span id="daily-day-num">1</span>/7)</div>
+                    <div class="text-[10px] text-slate-300">اضغط لاستلام مكافأتك اليومية المتصاعدة</div>
+                </div>
+                <button type="button" id="claim-daily-btn" onclick="claimDailyLogin()" class="gold-btn px-3 py-1.5 rounded-xl text-xs">استلم 150 🪙</button>
+            </div>
+
+            <!-- تحدي الأصدقاء المباشر بالـ ID -->
+            <div class="glass-card p-3 space-y-2 border-cyan-500/30">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-cyan-300">⚔️ تحدي صديق مباشر (1 ضد 1)</span>
+                    <span class="text-[10px] text-emerald-400 font-bold">بدون أكواد حركة ✓</span>
+                </div>
+                <div class="flex gap-1.5">
+                    <input id="pvp-friend-id" type="text" placeholder="ID صديقك (اختياري) RG-..." class="flex-1 bg-slate-950/80 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
+                    <select id="pvp-game-select" class="bg-slate-950/80 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-amber-300 font-bold outline-none">
+                        <option value="chess">♟️ شطرنج</option>
+                        <option value="connect4">🔴 4 في صف</option>
+                        <option value="xo">❌ XO</option>
+                    </select>
+                    <button type="button" onclick="sendPvPChallenge()" class="bg-cyan-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs cursor-pointer">تحدي</button>
+                </div>
+                <div id="pvp-invite-code-box" class="hidden flex items-center justify-between bg-slate-950/80 px-2.5 py-1.5 rounded-xl border border-cyan-500/40">
+                    <span class="text-[11px] text-cyan-300 font-bold">🔑 رقم الغرفة: <b id="pvp-room-num-display" class="font-mono text-amber-300 text-sm">-----</b></span>
+                    <button type="button" onclick="copyPvPRoomNum()" class="bg-cyan-500 text-slate-950 font-black px-2.5 py-1 rounded-lg text-[10px] cursor-pointer">📋 نسخ الرقم</button>
+                </div>
+                <div class="flex gap-1.5 pt-1 border-t border-white/5">
+                    <input id="pvp-join-code-in" type="text" placeholder="أدخل رقم الغرفة (5 أرقام) من صديقك..." class="flex-1 bg-slate-950/80 border border-slate-700 rounded-xl px-2.5 py-1 text-[10px] text-white outline-none">
+                    <select id="pvp-join-game-select" class="bg-slate-950/80 border border-slate-700 rounded-xl px-1.5 py-1 text-[10px] text-amber-300 font-bold outline-none">
+                        <option value="chess">♟️ شطرنج</option>
+                        <option value="connect4">🔴 4 في صف</option>
+                        <option value="xo">❌ XO</option>
+                    </select>
+                    <button type="button" onclick="joinPvPByCode()" class="bg-emerald-500 text-slate-950 font-black px-2.5 py-1 rounded-xl text-[10px] cursor-pointer">دخول الغرفة</button>
+                </div>
+            </div>
+
+            <!-- غرفة VIP للرهانات الكبرى (8 جولات + مضاعفة) -->
+            <div class="glass-card p-3 space-y-2.5 bg-gradient-to-r from-amber-950/60 to-red-950/50 border-amber-400/40">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-black text-amber-300">💎 غرفة كبار الشخصيات (8 جولات للصدارة)</div>
+                        <div class="text-[10px] text-slate-300">الحد الأدنى <b class="text-amber-300">1,000 🪙</b> • الفوز يضاعف رهانك والخسارة تُخصم منه</div>
+                    </div>
+                    <span class="text-[10px] bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded-full font-black">8 جولات</span>
+                </div>
+                <div class="flex gap-1.5">
+                    <input id="vip-stake-input" type="number" min="1000" step="100" value="1000" placeholder="مبلغ الدخول (1000+)" class="flex-1 bg-slate-950/90 border border-amber-500/40 rounded-xl px-2.5 py-1.5 text-xs text-amber-300 font-black outline-none">
+                    <button type="button" onclick="startVIPMatch()" class="gold-btn px-4 py-1.5 rounded-xl text-xs whitespace-nowrap">دخول الغرفة ▶</button>
+                </div>
+            </div>
+
+            <!-- شبكة الألعاب الـ 16 مضمّنة مباشرة في الصفحة -->
+            <div class="flex items-center justify-between pt-1">
+                <h2 class="text-sm font-black text-white">🎮 مكتبة الألعاب (16 لعبة)</h2>
+                <span class="text-[10px] text-slate-400">اختر لعبتك للبدء</span>
+            </div>
+            <div id="games-grid" class="grid grid-cols-2 gap-2.5">
+                <div role="button" tabindex="0" data-game="chess" onclick="openGameLobby('chess')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">♟️</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">استراتيجية + 3D</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">الشطرنج الملكي 3D</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">شطرنج كامل مع تبييت وترقية ومنظور 3D</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="puzzle" onclick="openGameLobby('puzzle')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🧩</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">تحدي ذكاء</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">ألغاز الشطرنج</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">اعثر على نقلة كش مات القاتلة فوراً</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="pool" onclick="openGameLobby('pool')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🎱</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">فيزياء واقعية</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">بلياردو 8 كرات</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">صوّب وأدخل الكرات ثم الكرة السوداء 8</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="tarneeb" onclick="openGameLobby('tarneeb')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🃏</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">ورق عربي</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">طرنيب ملوك الورق</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">العب بذكاء واقطع بالطرنيب للفوز</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="backgammon" onclick="openGameLobby('backgammon')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🎲</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">نرد وتكتيك</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">طاولة الزهر</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">ارمِ النرد وحرّك أحجارك إلى بر الأمان</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="solitaire" onclick="openGameLobby('solitaire')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🂡</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">ترتيب الأوراق</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">سوليتر السريع</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">رتب الأوراق تصاعدياً من الآص حتى الملك</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="domino" onclick="openGameLobby('domino')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🁣</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">حساب وذكاء</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">دومينو المحترفين</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">طابق الأرقام وتخلص من أحجارك أولاً</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="connect4" onclick="openGameLobby('connect4')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🔴</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">تحدي ثنائي</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">أربعة في صف</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">كوّن 4 أقراص متتالية أفقياً أو عمودياً</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="xo" onclick="openGameLobby('xo')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">❌</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">سرعة بديهة</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">إكس أو الملكية</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">كوّن خطاً من 3 رموز قبل خصمك</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="race" onclick="openGameLobby('race')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🏎️</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">سرعة وتفادي</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">سباق التوربو</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">تجاوز السيارات المنافسة نحو خط النهاية</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="snake" onclick="openGameLobby('snake')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🐍</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">كلاسيكي</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">ثعبان النيون</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">التهم التفاح الذهبي وكبّر ثعبانك</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="mines" onclick="openGameLobby('mines')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">💣</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">منطق وحذر</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">كاسر الألغام</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">اكشف المربعات الآمنة وتجنب القنابل</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="g2048" onclick="openGameLobby('g2048')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🔢</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">أرقام</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">تحدي 2048</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">ادمج الأرقام المتشابهة للوصول إلى 2048</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="memory" onclick="openGameLobby('memory')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">🧠</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">تركيز</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">ذاكرة الملوك</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">طابق الأزواج المتشابهة بأسرع وقت</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="rps" onclick="openGameLobby('rps')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">✊</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">حسم سريع</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">حجر ورقة مقص</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">اهزم خصمك في جولات حاسمة</div></div>
+                </div>
+                <div role="button" tabindex="0" data-game="checkers" onclick="openGameLobby('checkers')" class="game-card-item glass-card p-3 flex flex-col justify-between cursor-pointer hover:border-amber-400/60 transition active:scale-95">
+                    <div class="flex items-start justify-between"><span class="text-3xl">⚫</span><span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">قفز وأسر</span></div>
+                    <div class="mt-2"><div class="text-xs font-black text-white">الداما الملكية</div><div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">اقفز فوق قطع الخصم لأسرها والتتويج</div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ساحة اللعب -->
+        <section id="tab-arena" class="hidden space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+                <button type="button" onclick="exitArenaToGames()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">🔙 خروج</button>
+                <div class="text-center">
+                    <div id="arena-game-title" class="text-sm font-black text-amber-400">الشطرنج الملكي</div>
+                    <div id="arena-round-info" class="text-[10px] text-slate-400">الجولة 1</div>
+                </div>
+                <button type="button" onclick="openHowToPlay()" class="bg-slate-800 text-cyan-300 px-2.5 py-1.5 rounded-xl text-xs font-bold cursor-pointer">❓ القواعد</button>
+            </div>
+
+            <div id="turn-banner" class="p-2.5 rounded-xl text-center text-xs font-black bg-emerald-500/20 border border-emerald-400 text-emerald-300 turn-active">
+                🟢 دورك الآن!
+            </div>
+
+            <div id="vip-arena-hud" class="hidden glass-card p-2.5 flex items-center justify-between border-amber-400/50 bg-amber-950/30 text-xs">
+                <div>💎 الجولة: <b id="vip-hud-round" class="text-amber-300">1</b> / 8</div>
+                <div>💰 رصيد الغرفة: <b id="vip-hud-pot" class="text-emerald-400">1,000</b> 🪙</div>
+            </div>
+
+            <div class="glass-card p-2.5 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span id="opp-avatar" class="text-2xl">🤖</span>
+                    <div>
+                        <div id="opp-name" class="text-xs font-black text-white">الذكاء الاصطناعي</div>
+                        <div id="opp-chat" class="text-[10px] text-amber-300">حظاً موفقاً!</div>
+                    </div>
+                </div>
+                <div id="arena-extra-controls" class="flex items-center gap-1.5"></div>
+            </div>
+
+            <div id="pvp-relay-box" class="hidden glass-card p-2.5 flex items-center justify-between border-cyan-400/50 bg-cyan-950/30">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    <div>
+                        <div class="text-[11px] font-black text-cyan-300">🔗 غرفة مباشرة #<span id="pvp-arena-room-num" class="font-mono text-amber-300">-----</span></div>
+                        <div id="pvp-role-badge" class="text-[10px] text-slate-300">تنتقل الحركات لصديقك تلقائياً!</div>
+                    </div>
+                </div>
+                <button type="button" onclick="copyPvPRoomNum()" class="bg-cyan-500 text-slate-950 font-black px-2.5 py-1 rounded-lg text-[10px] cursor-pointer">📋 رقم الغرفة</button>
+            </div>
+
+            <div id="game-stage" class="glass-card p-3 min-h-[340px] flex flex-col items-center justify-center"></div>
+        </section>
+
+        <!-- 3. قسم المتجر -->
+        <section id="tab-shop" class="hidden space-y-3">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-black text-amber-400">🛍️ المتجر الملكي الفاخر</h2>
+                <button type="button" onclick="buyVIPMembership()" class="bg-gradient-to-r from-purple-600 to-amber-500 text-white px-3 py-1 rounded-full text-[11px] font-black cursor-pointer">👑 عضوية VIP (30,000 🪙)</button>
+            </div>
+
+            <div class="glass-card p-3 space-y-1.5 border-amber-400/40 bg-gradient-to-r from-amber-950/40 to-purple-950/40">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-amber-300">👑 مزايا عضوية VIP الملكية (30,000 🪙)</span>
+                    <span id="vip-status-tag" class="text-[10px] px-2 py-0.5 rounded-full font-black bg-slate-800 text-slate-300">غير مفعّلة</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5 text-[10px] text-slate-200 font-bold pt-1">
+                    <div>⚡ مضاعفة أرباح المباريات ×1.5</div>
+                    <div>💸 عمولة تحويل للأصدقاء 0%</div>
+                    <div>🏷️ خصم فوري 25% على المتجر</div>
+                    <div>🏅 شارة VIP وتاج ملكي مميز</div>
+                </div>
+            </div>
+
+            <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+                <button type="button" onclick="setShopCat('all')" class="shop-cat-btn bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-black shrink-0" data-cat="all">الكل</button>
+                <button type="button" onclick="setShopCat('chess')" class="shop-cat-btn bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0" data-cat="chess">♟️ الشطرنج</button>
+                <button type="button" onclick="setShopCat('pool')" class="shop-cat-btn bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0" data-cat="pool">🎱 البلياردو</button>
+                <button type="button" onclick="setShopCat('cards')" class="shop-cat-btn bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0" data-cat="cards">🃏 البطاقات</button>
+                <button type="button" onclick="setShopCat('cars')" class="shop-cat-btn bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0" data-cat="cars">🏎️ السيارات</button>
+                <button type="button" onclick="setShopCat('frames')" class="shop-cat-btn bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0" data-cat="frames">🖼️ الإطارات</button>
+            </div>
+            <div id="shop-items-grid" class="grid grid-cols-2 gap-2.5"></div>
+        </section>
+
+        <!-- 4. قسم التحديات والمهام اليومية -->
+        <section id="tab-challenges" class="hidden space-y-3">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-black text-amber-400">🎯 المهام والجوائز اليومية</h2>
+                <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-black">تتحدث كل 24 ساعة ⏰</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+                <div class="glass-card p-3 text-center space-y-2 border-amber-500/30">
+                    <div class="text-3xl">🎡</div>
+                    <div class="text-xs font-black text-white">عجلة الحظ اليومية</div>
+                    <button type="button" id="wheel-btn" onclick="spinDailyWheel()" class="gold-btn w-full py-1.5 rounded-xl text-xs">أدر العجلة مجاناً</button>
+                </div>
+                <div class="glass-card p-3 text-center space-y-2 border-purple-500/30">
+                    <div class="text-3xl">📦</div>
+                    <div class="text-xs font-black text-white">صندوق الأساطير</div>
+                    <button type="button" onclick="openLootBox()" class="bg-purple-600 text-white font-black w-full py-1.5 rounded-xl text-xs cursor-pointer">افتح (400 🪙)</button>
+                </div>
+            </div>
+
+            <div id="daily-missions-list" class="space-y-2"></div>
+        </section>
+
+        <!-- 5. قسم ملفي -->
+        <section id="tab-profile" class="hidden space-y-3">
+            <div class="glass-card p-4 text-center space-y-2.5 relative">
+                <div class="relative w-20 h-20 mx-auto">
+                    <div id="profile-avatar-box" class="w-20 h-20 rounded-full bg-slate-800 border-4 border-amber-400 flex items-center justify-center text-4xl overflow-hidden shadow-xl">
+                        <span id="profile-avatar-emoji">👑</span>
+                        <img id="profile-avatar-img" class="hidden w-full h-full object-cover" alt="profile">
+                    </div>
+                    <label for="avatar-file-input" class="absolute bottom-0 right-0 bg-amber-500 text-slate-950 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black cursor-pointer shadow-lg">📷</label>
+                    <input id="avatar-file-input" type="file" accept="image/*" class="hidden" onchange="uploadProfileImage(event)">
+                </div>
+
+                <div>
+                    <div id="profile-name-display" class="text-base font-black text-white">اللاعب الملكي</div>
+                    <div class="text-xs text-amber-400 font-bold" id="profile-title-display">مبتدئ</div>
+                </div>
+
+                <div class="flex gap-1.5 max-w-xs mx-auto">
+                    <input id="new-name-input" type="text" placeholder="اسمك الجديد..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
+                    <button type="button" id="change-name-btn" onclick="changePlayerName()" class="gold-btn px-3 py-1.5 rounded-xl text-xs whitespace-nowrap">تغيير (مجاني)</button>
+                </div>
+
+                <div class="bg-slate-950/90 border border-cyan-500/30 rounded-xl p-2 flex items-center justify-between max-w-xs mx-auto">
+                    <span class="text-[11px] text-slate-400">معرّفك (ID): <b id="player-id-display" class="text-cyan-300 font-mono">RG-000000</b></span>
+                    <button type="button" onclick="copyPlayerId()" class="bg-cyan-500 text-slate-950 font-black px-2.5 py-1 rounded-lg text-[10px] cursor-pointer">📋 نسخ</button>
+                </div>
+            </div>
+
+            <!-- الحساب السحابي المشترك بين الجوالات -->
+            <div class="glass-card p-3 space-y-2 border-emerald-500/40 bg-emerald-950/20">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-emerald-300">☁️ الحساب السحابي المشترك (للدخول من أي جوال)</span>
+                    <span id="cloud-sync-badge" class="text-[10px] text-emerald-400 font-bold">متصل ✓</span>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5">
+                    <input id="cloud-user-in" type="text" placeholder="اسم المستخدم..." class="bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
+                    <input id="cloud-pass-in" type="password" placeholder="كلمة المرور..." class="bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
+                </div>
+                <div class="flex gap-1.5">
+                    <button type="button" onclick="saveCloudAccount()" class="flex-1 bg-emerald-500 text-slate-950 font-black py-1.5 rounded-xl text-xs cursor-pointer">☁️ حفظ / تحديث حسابي</button>
+                    <button type="button" onclick="loginCloudAccount()" class="flex-1 bg-cyan-500 text-slate-950 font-black py-1.5 rounded-xl text-xs cursor-pointer">📲 دخول من جوال آخر</button>
+                </div>
+            </div>
+
+            <!-- إحصائيات -->
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="glass-card p-2.5">
+                    <div id="stat-wins" class="text-base font-black text-emerald-400">0</div>
+                    <div class="text-[10px] text-slate-400">الانتصارات</div>
+                </div>
+                <div class="glass-card p-2.5">
+                    <div id="stat-streak" class="text-base font-black text-orange-400">0</div>
+                    <div class="text-[10px] text-slate-400">أطول سلسلة</div>
+                </div>
+                <div class="glass-card p-2.5">
+                    <div id="stat-xp" class="text-base font-black text-purple-400">0</div>
+                    <div class="text-[10px] text-slate-400">نقاط الخبرة</div>
+                </div>
+            </div>
+
+            <!-- الخزنة الذهبية -->
+            <div class="glass-card p-3 space-y-2 border-amber-500/30">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-amber-300">🏦 الخزنة الذهبية (إيداع شهري • ربح +5%)</span>
+                    <span class="text-xs font-black text-emerald-400">الرصيد: <span id="vault-balance">0</span> 🪙</span>
+                </div>
+                <div id="vault-month-status" class="text-[10px] text-cyan-300 font-bold">حالة الإيداع الشهري: متاح مرة واحدة هذا الشهر</div>
+                <div class="flex gap-1.5">
+                    <input id="vault-amount-input" type="number" placeholder="المبلغ..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
+                    <button type="button" id="vault-deposit-btn" onclick="depositToVault()" class="bg-amber-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs cursor-pointer">إيداع شهري</button>
+                    <button type="button" onclick="withdrawFromVault()" class="bg-emerald-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs cursor-pointer">سحب +5%</button>
+                </div>
+            </div>
+
+            <!-- تحويل العملات لصديق عبر الـ ID -->
+            <div class="glass-card p-3 space-y-2 border-cyan-500/30">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-cyan-300">💸 تحويل عملات لصديق عبر الـ ID</span>
+                    <span id="transfer-fee-label" class="text-[10px] text-slate-400">العمولة: 10%</span>
+                </div>
+                <div class="flex gap-1.5">
+                    <input id="transfer-target-id" type="text" placeholder="ID صديقك (RG-...)" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white outline-none">
+                    <input id="transfer-amount-input" type="number" placeholder="المبلغ" class="w-20 bg-slate-950 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-white outline-none">
+                    <button type="button" onclick="transferCoinsToFriend()" class="bg-cyan-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs cursor-pointer">تحويل</button>
+                </div>
+                <div id="voucher-out-box" class="hidden space-y-1 pt-1">
+                    <div class="text-[10px] text-amber-300">قسيمة احتياطية (انسخها وأرسلها لصديقك):</div>
+                    <div class="flex gap-1.5">
+                        <input id="voucher-code-generated" type="text" readonly class="flex-1 bg-slate-950 border border-amber-500/40 rounded-lg px-2 py-1 text-[10px] text-amber-200 font-mono">
+                        <button type="button" onclick="copyVoucherCode()" class="bg-amber-500 text-slate-950 font-black px-2 py-1 rounded-lg text-[10px] cursor-pointer">نسخ</button>
+                    </div>
+                </div>
+                <div class="flex gap-1.5 pt-1 border-t border-white/5">
+                    <input id="voucher-redeem-input" type="text" placeholder="لصق كود قسيمة واردة (RGV-...)..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-1 text-[10px] text-white outline-none">
+                    <button type="button" onclick="redeemTransferVoucher()" class="bg-emerald-500 text-slate-950 font-black px-2.5 py-1 rounded-xl text-[10px] cursor-pointer">استلام</button>
+                </div>
+            </div>
+
+            <!-- النسخ الاحتياطي ونقل الحساب -->
+            <div class="glass-card p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-white">🔐 النسخ الاحتياطي ونقل الحساب المشفر</span>
+                    <button type="button" onclick="toggleSound()" id="sound-toggle-btn" class="text-[11px] bg-slate-800 px-2.5 py-1 rounded-lg text-amber-300 font-bold cursor-pointer">🔊 الصوت: يعمل</button>
+                </div>
+                <div class="flex gap-1.5">
+                    <button type="button" onclick="exportBackupCode()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold py-1.5 rounded-xl text-xs cursor-pointer">📤 نسخ كود حسابي</button>
+                    <button type="button" onclick="importBackupCode()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-emerald-300 font-bold py-1.5 rounded-xl text-xs cursor-pointer">📥 استرجاع من كود</button>
+                </div>
+                <textarea id="backup-code-box" rows="2" placeholder="هنا يظهر كود حسابك المشفر أو الصق كودك للاسترجاع..." class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-[10px] text-slate-300 font-mono outline-none"></textarea>
+            </div>
+        </section>
+    </main>
+
+    <!-- الشريط السفلي للتنقل -->
+    <nav class="fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-lg border-t border-white/10 px-2 py-2">
+        <div class="max-w-lg mx-auto grid grid-cols-4 gap-1 text-center">
+            <button type="button" onclick="switchTab('games')" class="nav-btn text-amber-400 flex flex-col items-center py-1 cursor-pointer" data-tab="games">
+                <span class="text-lg">🎮</span><span class="text-[10px] font-black">الألعاب</span>
+            </button>
+            <button type="button" onclick="switchTab('shop')" class="nav-btn text-slate-400 flex flex-col items-center py-1 cursor-pointer" data-tab="shop">
+                <span class="text-lg">🛍️</span><span class="text-[10px] font-bold">المتجر</span>
+            </button>
+            <button type="button" onclick="switchTab('challenges')" class="nav-btn text-slate-400 flex flex-col items-center py-1 cursor-pointer" data-tab="challenges">
+                <span class="text-lg">🎯</span><span class="text-[10px] font-bold">المهام</span>
+            </button>
+            <button type="button" onclick="switchTab('profile')" class="nav-btn text-slate-400 flex flex-col items-center py-1 cursor-pointer" data-tab="profile">
+                <span class="text-lg">👤</span><span class="text-[10px] font-bold">ملفي</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- نافذة اختيار مستوى الصعوبة -->
+    <div id="lobby-modal" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-sm p-5 space-y-4 border-amber-500/40">
+            <div class="text-center">
+                <div id="lobby-icon" class="text-4xl mb-1">♟️</div>
+                <h3 id="lobby-title" class="text-lg font-black text-white">الشطرنج الملكي</h3>
+                <p id="lobby-desc" class="text-xs text-slate-400">اختر مستوى الذكاء الاصطناعي للخصم</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <button type="button" onclick="selectDifficulty('easy')" class="diff-btn bg-slate-800 border border-slate-600 p-2.5 rounded-xl text-xs font-bold text-emerald-400 cursor-pointer" data-diff="easy">🌱 مبتدئ (+50 🪙)</button>
+                <button type="button" onclick="selectDifficulty('medium')" class="diff-btn bg-slate-800 border border-amber-400 p-2.5 rounded-xl text-xs font-bold text-amber-300 cursor-pointer" data-diff="medium">⚔️ متوسط (+100 🪙)</button>
+                <button type="button" onclick="selectDifficulty('hard')" class="diff-btn bg-slate-800 border border-slate-600 p-2.5 rounded-xl text-xs font-bold text-orange-400 cursor-pointer" data-diff="hard">🔥 صعب (+180 🪙)</button>
+                <button type="button" onclick="selectDifficulty('master')" class="diff-btn bg-slate-800 border border-slate-600 p-2.5 rounded-xl text-xs font-bold text-rose-400 cursor-pointer" data-diff="master">👑 أستاذ (+300 🪙)</button>
+            </div>
+            <div class="flex gap-2">
+                <button type="button" onclick="launchSelectedGame()" class="gold-btn flex-1 py-2.5 rounded-xl text-xs">ابدأ اللعب ▶</button>
+                <button type="button" onclick="startBetMatch()" class="bg-rose-600 text-white font-black px-3 py-2.5 rounded-xl text-xs cursor-pointer">🎰 رهان 100→300</button>
+            </div>
+            <button type="button" onclick="closeModal('lobby-modal')" class="w-full text-xs text-slate-400 py-1 cursor-pointer">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- نافذة نتيجة المباراة -->
+    <div id="result-modal" class="hidden fixed inset-0 z-[95] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-sm p-5 text-center space-y-3 border-amber-400/50">
+            <div id="res-emoji" class="text-5xl">🏆</div>
+            <h3 id="res-title" class="text-xl font-black text-amber-400">انتصار ملكي!</h3>
+            <p id="res-sub" class="text-xs text-slate-300">لقد تفوقت على خصمك بجدارة</p>
+            <div id="res-reward-box" class="bg-slate-950/90 border border-amber-500/30 rounded-xl p-2.5 text-sm font-black text-emerald-400">+100 🪙 • +50 XP</div>
+            <div class="flex gap-2 pt-1">
+                <button type="button" id="res-next-btn" onclick="nextRoundSameGame()" class="gold-btn flex-1 py-2.5 rounded-xl text-xs">الجولة التالية ⏭️</button>
+                <button type="button" onclick="closeResultAndExit()" class="bg-slate-800 text-white font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer">خروج</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة ترقية البيدق بالشطرنج -->
+    <div id="promotion-modal" class="hidden fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4">
+        <div class="glass-card p-4 text-center space-y-3 border-amber-400">
+            <div class="text-sm font-black text-amber-300">👑 اختر قطعة الترقية</div>
+            <div class="grid grid-cols-4 gap-2 text-3xl">
+                <button type="button" onclick="choosePromotion('Q')" class="bg-slate-800 p-3 rounded-xl hover:bg-amber-500/30 cursor-pointer">♕</button>
+                <button type="button" onclick="choosePromotion('R')" class="bg-slate-800 p-3 rounded-xl hover:bg-amber-500/30 cursor-pointer">♖</button>
+                <button type="button" onclick="choosePromotion('B')" class="bg-slate-800 p-3 rounded-xl hover:bg-amber-500/30 cursor-pointer">♗</button>
+                <button type="button" onclick="choosePromotion('N')" class="bg-slate-800 p-3 rounded-xl hover:bg-amber-500/30 cursor-pointer">♘</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة قواعد اللعبة -->
+    <div id="howto-modal" class="hidden fixed inset-0 z-[95] bg-black/80 flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-sm p-5 space-y-3">
+            <h3 id="howto-title" class="text-base font-black text-amber-400">قواعد اللعبة</h3>
+            <p id="howto-body" class="text-xs text-slate-300 leading-relaxed"></p>
+            <button type="button" onclick="closeModal('howto-modal')" class="gold-btn w-full py-2 rounded-xl text-xs">فهمت ✓</button>
+        </div>
+    </div>
+
+<script>
+const STORAGE_KEY = 'royal_games_hub_v7';
+
+const GAMES_META = {
+    chess: { name: 'الشطرنج الملكي 3D', icon: '♟️', desc: 'شطرنج كامل مع تبييت وترقية ومنظور ثلاثي الأبعاد.', rules: 'حرك قطعك لإماتة ملك الخصم. ممنوع التراجع أو إعادة القطعة لنفس مكانها.' },
+    puzzle: { name: 'ألغاز الشطرنج', icon: '🧩', desc: 'اعثر على نقلة كش مات القاتلة في نقلة واحدة!', rules: 'اختر القطعة البيضاء ثم المربع الذي يحقق كش مات فوراً.' },
+    pool: { name: 'بلياردو 8 كرات', icon: '🎱', desc: 'صوّب واسحب العصا لإدخال الكرات ثم الكرة 8.', rules: 'اسحب للخلف للتصويب وتحديد القوة ثم أطلق الكرة البيضاء.' },
+    tarneeb: { name: 'طرنيب ملوك الورق', icon: '🃏', desc: 'العب بذكاء والتزم بنوع الورقة للفوز بالأكلات.', rules: 'ارمِ ورقة أعلى من الخصم من نفس النوع أو اقطع بالطرنيب (♠️).' },
+    backgammon: { name: 'طاولة الزهر', icon: '🎲', desc: 'ارمِ النرد وحرّك أحجارك إلى بر الأمان قبل الخصم.', rules: 'اضغط رمي النرد ثم اختر الحجر لتحريكه بمقدار النرد.' },
+    solitaire: { name: 'سوليتر السريع', icon: '🂡', desc: 'رتب الأوراق تصاعدياً من الآص حتى الملك.', rules: 'اضغط على البطاقات بالترتيب الصحيح لإكمال المجموعة.' },
+    domino: { name: 'دومينو المحترفين', icon: '🁣', desc: 'طابق الأرقام على طرفي السلسلة وتخلص من أحجارك.', rules: 'اختر حجراً يطابق أحد طرفي الطاولة للعب.' },
+    connect4: { name: 'أربعة في صف', icon: '🔴', desc: 'أسقط أقراصك لتكوين 4 أقراص متتالية أفقياً أو عمودياً أو قطرياً.', rules: 'اضغط على أي عمود لإسقاط قرصك الذهبي فيه.' },
+    xo: { name: 'إكس أو الملكية', icon: '❌', desc: 'كوّن خطاً من 3 رموز قبل خصمك.', rules: 'اضغط على أي خانة فارغة لوضع علامة X.' },
+    race: { name: 'سباق التوربو', icon: '🏎️', desc: 'تجاوز السيارات المنافسة واجمع الوقود والعملات.', rules: 'اضغط تسارع وتجاوز الحواجز للوصول إلى خط النهاية.' },
+    snake: { name: 'ثعبان النيون', icon: '🐍', desc: 'التهم التفاح الذهبي وكبّر ثعبانك دون الاصطدام.', rules: 'التهم 5 تفاحات ذهبية للفوز بالجولة.' },
+    mines: { name: 'كاسر الألغام', icon: '💣', desc: 'اكشف المربعات الآمنة وتجنب القنابل المخفية.', rules: 'افتح 5 مربعات آمنة وتجنب القنبلة المخفية.' },
+    g2048: { name: 'تحدي 2048', icon: '🔢', desc: 'ادمج الأرقام المتشابهة للوصول إلى 2048.', rules: 'ادمج المضاعفات للوصول إلى 2048.' },
+    memory: { name: 'ذاكرة الملوك', icon: '🧠', desc: 'طابق الأزواج المتشابهة بأقل عدد من المحاولات.', rules: 'اقلب بطاقتين في كل دور للعثور على التطابق.' },
+    rps: { name: 'حجر ورقة مقص', icon: '✊', desc: 'اهزم خصمك في 3 جولات حاسمة.', rules: 'الحجر يكسر المقص، المقص يقص الورقة، الورقة تغطي الحجر.' },
+    checkers: { name: 'الداما الملكية', icon: '⚫', desc: 'اقفز فوق قطع الخصم لأسرها والوصول للتتويج.', rules: 'اقفز فوق قطع الخصم لأسرها والوصول للتتويج.' }
+};
+
+const SHOP_ITEMS = [
+    { id: 'chess_gold', cat: 'chess', name: 'طقم الشطرنج الذهبي', icon: '👑', price: 600, rarity: 'legendary' },
+    { id: 'chess_blood', cat: 'chess', name: 'طقم الياقوت الدامي', icon: '🩸', price: 900, rarity: 'bloody' },
+    { id: 'chess_neon', cat: 'chess', name: 'شطرنج النيون الأزرق', icon: '💎', price: 450, rarity: 'epic' },
+    { id: 'pool_dragon', cat: 'pool', name: 'عصا التنين الأسطورية', icon: '🐉', price: 700, rarity: 'legendary' },
+    { id: 'pool_ice', cat: 'pool', name: 'عصا الجليد الملكي', icon: '❄️', price: 400, rarity: 'rare' },
+    { id: 'cards_royal', cat: 'cards', name: 'أوراق الذهب الملكي', icon: '🃏', price: 500, rarity: 'epic' },
+    { id: 'cards_dark', cat: 'cards', name: 'أوراق الظلام القرمزي', icon: '🎴', price: 650, rarity: 'bloody' },
+    { id: 'car_hyper', cat: 'cars', name: 'سيارة البرق الذهبية', icon: '🏎️', price: 800, rarity: 'legendary' },
+    { id: 'car_cyber', cat: 'cars', name: 'مركبة السايبر الخارقة', icon: '🚀', price: 550, rarity: 'epic' },
+    { id: 'frame_gold', cat: 'frames', name: 'إطار التاج الذهبي', icon: '🖼️', price: 500, rarity: 'legendary' },
+    { id: 'frame_fire', cat: 'frames', name: 'إطار اللهب الأسطوري', icon: '🔥', price: 750, rarity: 'bloody' }
+];
+
+const OPPONENTS = [
+    { name: 'الأمير فارس', avatar: '🤴', chat: 'لنرَ مهاراتك في هذه الجولة!' },
+    { name: 'الملكة ليلى', avatar: '👸', chat: 'خطتي محكمة للغاية، استعد!' },
+    { name: 'الأستاذ كريم', avatar: '🧙‍♂️', chat: 'الهدوء والتركيز مفتاح النصر.' },
+    { name: 'البطل طارق', avatar: '🥷', chat: 'سأفاجئك بنقلتي القادمة!' }
+];
+
+let state = {
+    playerId: 'RG-' + Math.floor(100000 + Math.random() * 900000),
+    name: 'اللاعب الملكي',
+    avatarEmoji: '👑',
+    avatarDataUrl: '',
+    coins: 1000,
+    vault: 0,
+    lastVaultDepositMonth: '',
+    xp: 0,
+    level: 1,
+    wins: 0,
+    streak: 0,
+    bestStreak: 0,
+    isVIP: false,
+    nameChangedOnce: false,
+    dailyDay: 1,
+    lastDailyDate: '',
+    lastWheelDate: '',
+    soundOn: t
