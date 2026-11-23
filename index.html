@@ -1,4 +1,71 @@
-<!-- ... existing code ... -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" translate="no" class="notranslate">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="google" content="notranslate" />
+    <title>منصة الألعاب الفاخرة الشاملة | Royal Games Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: radial-gradient(circle at top, #0f172a 0%, #020617 70%); color: #f8fafc; min-height: 100vh; overflow-x: hidden; }
+        .glass-card { background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; }
+        .gold-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: #0f172a; font-weight: 800; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35); transition: transform 0.12s; cursor: pointer; }
+        .gold-btn:active { transform: scale(0.96); }
+        .chess-board { display: grid; grid-template-columns: repeat(8, 1fr); width: 100%; max-width: 380px; aspect-ratio: 1/1; border: 3px solid #f59e0b; border-radius: 10px; overflow: hidden; margin: 0 auto; }
+        .chess-sq { display: flex; align-items: center; justify-content: center; font-size: clamp(1.35rem, 6.2vw, 2rem); cursor: pointer; user-select: none; position: relative; }
+        .sq-light { background: #e2e8f0; }
+        .sq-dark { background: #475569; }
+        .sq-sel { outline: 3px solid #f59e0b; outline-offset: -3px; background: rgba(245, 158, 11, 0.45) !important; }
+        .sq-hint::after { content: ''; width: 32%; height: 32%; border-radius: 50%; background: rgba(16, 185, 129, 0.75); }
+        .piece-w { color: #ffffff; text-shadow: 0 2px 3px #000, 0 0 2px #000; }
+        .piece-b { color: #0f172a; text-shadow: 0 1px 2px rgba(255,255,255,0.85); }
+        .c4-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #1e3a8a; padding: 8px; border-radius: 14px; width: 100%; max-width: 370px; margin: 0 auto; }
+        .c4-cell { aspect-ratio: 1/1; border-radius: 50%; background: #0f172a; cursor: pointer; box-shadow: inset 0 3px 6px rgba(0,0,0,0.7); }
+        .c4-p1 { background: radial-gradient(circle at 30% 30%, #fde047, #eab308); }
+        .c4-p2 { background: radial-gradient(circle at 30% 30%, #f87171, #dc2626); }
+        .xo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 310px; margin: 0 auto; }
+        .xo-cell { aspect-ratio: 1/1; background: rgba(30,41,59,0.9); border: 2px solid rgba(255,255,255,0.12); border-radius: 14px; font-size: 2.8rem; font-weight: 900; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .rarity-common { border-color: #94a3b8; }
+        .rarity-rare { border-color: #38bdf8; }
+        .rarity-epic { border-color: #c084fc; }
+        .rarity-legendary { border-color: #f59e0b; }
+        .rarity-bloody { border-color: #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.35); }
+        @keyframes pulseTurn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+        .turn-glow { animation: pulseTurn 1.5s infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="pb-24">
+
+    <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-white/10 px-3 py-2.5">
+        <div class="max-w-lg mx-auto flex items-center justify-between gap-2">
+            <div role="button" tabindex="0" onclick="switchTab('profile')" class="flex items-center gap-2.5 cursor-pointer">
+                <div id="header-avatar-wrap" class="w-11 h-11 rounded-full bg-slate-800 border-2 border-amber-400 flex items-center justify-center text-xl overflow-hidden shrink-0">
+                    <span id="header-avatar-emoji">👑</span>
+                    <img id="header-avatar-img" class="w-full h-full object-cover hidden" alt="avatar" />
+                </div>
+                <div>
+                    <div class="flex items-center gap-1">
+                        <span id="header-name" class="text-xs font-black text-white">اللاعب الملكي</span>
+                        <span id="header-vip-badge" class="hidden text-[9px] bg-amber-400 text-slate-950 font-black px-1.5 rounded">VIP</span>
+                    </div>
+                    <div class="text-[10px] text-amber-300 font-bold">
+                        <span id="header-title">مبتدئ 🌱</span> • مستوى <span id="header-level">1</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+                <div class="bg-slate-900 border border-amber-500/40 px-3 py-1 rounded-full flex items-center gap-1.5 shadow">
+                    <span class="text-sm">🪙</span>
+                    <span id="header-coins" class="text-xs font-black text-amber-400">1000</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <div id="toast-msg" style="display:none" class="pointer-events-none fixed top-16 left-1/2 -translate-x-1/2 z-[120] hidden bg-slate-900/95 border border-amber-400/60 text-white px-4 py-2 rounded-full text-xs font-bold shadow-2xl whitespace-nowrap"></div>
 
     <div id="incoming-invite-banner" style="display:none" class="hidden fixed top-14 inset-x-3 max-w-lg mx-auto z-[110] glass-card p-3 border-2 border-cyan-400 bg-slate-950/95 shadow-2xl flex items-center justify-between gap-2">
@@ -11,7 +78,213 @@
             <button type="button" onclick="acceptIncomingInvite()" class="bg-emerald-500 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-black">قبول ▶</button>
         </div>
     </div>
-<!-- ... existing code ... -->
+
+    <main class="max-w-lg mx-auto px-3 pt-3 space-y-4">
+
+        <section id="tab-games" class="space-y-4">
+
+            <div class="glass-card p-3 flex items-center justify-between gap-2 border-amber-500/30">
+                <div>
+                    <div class="text-xs font-black text-amber-400">🎁 مكافأة الحضور اليومي (يوم <span id="daily-day-num">1</span>/7)</div>
+                    <div class="text-[11px] text-slate-300">اضغط لاستلام مكافأتك اليومية المتصاعدة</div>
+                </div>
+                <button type="button" id="claim-daily-btn" onclick="claimDailyReward()" class="gold-btn px-3 py-2 rounded-xl text-xs shrink-0">استلم 150 🪙</button>
+            </div>
+
+            <div class="glass-card p-3.5 border-cyan-500/40 bg-gradient-to-br from-slate-900 to-cyan-950/30 space-y-2.5">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-cyan-300">⚔️ تحدي صديق مباشر (1 ضد 1)</span>
+                    <span class="text-[10px] text-emerald-400 font-bold">بدون أكواد حركة ✓</span>
+                </div>
+                <div class="flex gap-1.5">
+                    <input id="pvp-target-id" type="text" placeholder="ID صديقك (اختياري) RG-..." class="flex-1 bg-slate-950 border border-white/15 rounded-xl px-2.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400" />
+                    <select id="pvp-game-select" class="bg-slate-950 border border-white/15 rounded-xl px-2 py-2 text-xs text-amber-300 font-bold">
+                        <option value="chess">♟️ شطرنج</option>
+                        <option value="connect4">🔴 4 تربح</option>
+                        <option value="xo">❌⭕ XO</option>
+                    </select>
+                    <button type="button" onclick="createDirectPvPRoom()" class="bg-cyan-500 text-slate-950 font-black px-3 py-2 rounded-xl text-xs shrink-0 cursor-pointer">تحدي</button>
+                </div>
+                <div class="flex gap-1.5 pt-1 border-t border-white/10">
+                    <input id="pvp-join-code" type="text" maxlength="5" placeholder="أدخل رقم الغرفة (5 أرقام) من صديقك..." class="flex-1 bg-slate-950 border border-white/15 rounded-xl px-2.5 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-400" />
+                    <select id="pvp-join-game" class="bg-slate-950 border border-white/15 rounded-xl px-2 py-1.5 text-xs text-slate-300 font-bold">
+                        <option value="chess">♟️ شطرنج</option>
+                        <option value="connect4">🔴 4 تربح</option>
+                        <option value="xo">❌⭕ XO</option>
+                    </select>
+                    <button type="button" onclick="joinDirectPvPRoom()" class="bg-emerald-500 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs shrink-0 cursor-pointer">دخول الغرفة</button>
+                </div>
+            </div>
+
+            <div class="glass-card p-3.5 border-amber-500/40 bg-gradient-to-br from-slate-900 via-amber-950/20 to-slate-900 space-y-2">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-black text-amber-400">💎 غرفة كبار الشخصيات (8 جولات للصدارة)</div>
+                        <div class="text-[10px] text-slate-300">الحد الأدنى 1,000 🪙 • الفوز يضاعف رهانك والخسارة تخصم منه</div>
+                    </div>
+                    <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">8 جولات</span>
+                </div>
+                <div class="flex gap-2">
+                    <input id="vip-bet-input" type="number" min="1000" step="500" value="1000" class="flex-1 bg-slate-950 border border-amber-500/30 rounded-xl px-3 py-2 text-xs text-amber-300 font-black" />
+                    <button type="button" onclick="enterVIP8Room()" class="gold-btn px-4 py-2 rounded-xl text-xs shrink-0">دخول الغرفة ▶</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-sm font-black text-white">🎮 مكتبة الألعاب (16 لعبة)</h2>
+                    <span class="text-[10px] text-slate-400">اختر لعبتك للبدء</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2.5" id="games-grid"></div>
+            </div>
+        </section>
+
+        <section id="tab-arena" class="hidden space-y-3">
+            <div class="glass-card p-2.5 flex items-center justify-between gap-2">
+                <button type="button" onclick="exitArena()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">→ رجوع</button>
+                <div class="text-center">
+                    <div id="arena-game-title" class="text-xs font-black text-amber-400">الشطرنج الملكي</div>
+                    <div id="arena-sub-info" class="text-[10px] text-slate-300">الجولة 1 • ضد الذكاء الاصطناعي</div>
+                </div>
+                <button type="button" onclick="openHowToPlay()" class="bg-slate-800 text-amber-300 w-8 h-8 rounded-xl text-xs font-black cursor-pointer">؟</button>
+            </div>
+
+            <div id="pvp-status-bar" class="hidden glass-card p-2.5 border-cyan-400/50 bg-cyan-950/30 text-center space-y-1">
+                <div class="flex items-center justify-center gap-2 text-xs font-black text-cyan-300">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span id="pvp-room-label">غرفة مباشرة #00000</span>
+                    <button type="button" onclick="copyPvPRoomCode()" class="bg-cyan-500/20 text-cyan-200 px-2 py-0.5 rounded text-[10px] cursor-pointer">نسخ الرقم</button>
+                </div>
+                <div id="pvp-connection-text" class="text-[11px] text-slate-300">بانتظار دخول صديقك...</div>
+            </div>
+
+            <div id="vip8-status-bar" class="hidden glass-card p-2.5 border-amber-400/60 bg-amber-950/30 flex items-center justify-between text-xs">
+                <span class="font-black text-amber-300">💎 جولة <span id="vip8-round-txt">1</span> / 8</span>
+                <span class="font-black text-emerald-400">رصيد الغرفة: <span id="vip8-pot-txt">1000</span> 🪙</span>
+            </div>
+
+            <div class="glass-card p-3 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span id="opp-avatar" class="text-2xl">🤖</span>
+                    <div>
+                        <div id="opp-name" class="text-xs font-black text-white">الخصم الذكي</div>
+                        <div id="opp-status" class="text-[10px] text-slate-400">جاهز للعب</div>
+                    </div>
+                </div>
+                <div id="turn-badge" class="bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 px-3 py-1 rounded-full text-xs font-black turn-glow">
+                    دورك الآن
+                </div>
+            </div>
+
+            <div id="arena-board-container" class="glass-card p-3 flex flex-col items-center justify-center min-h-[340px]"></div>
+
+            <div class="flex gap-2">
+                <button type="button" onclick="restartCurrentRound()" class="flex-1 bg-slate-800 text-white py-2.5 rounded-xl text-xs font-bold cursor-pointer">🔄 إعادة الجولة</button>
+                <button type="button" onclick="surrenderMatch()" class="flex-1 bg-rose-950/80 border border-rose-500/40 text-rose-300 py-2.5 rounded-xl text-xs font-bold cursor-pointer">🏳️ انسحاب</button>
+            </div>
+        </section>
+
+        <section id="tab-shop" class="hidden space-y-4">
+            <div class="glass-card p-3.5 border-amber-400/40 flex items-center justify-between">
+                <div>
+                    <div class="text-sm font-black text-amber-400">👑 العضوية الملكية VIP</div>
+                    <div class="text-[11px] text-slate-300">+50% عملات إضافية • شارة ذهبية • فتح كافة الأفتارات</div>
+                </div>
+                <button type="button" id="buy-vip-btn" onclick="buyVIP()" class="gold-btn px-3 py-2 rounded-xl text-xs shrink-0">2,500 🪙</button>
+            </div>
+
+            <div>
+                <h3 class="text-sm font-black text-white mb-2">🎭 متجر الأفتارات والندرات</h3>
+                <div id="shop-avatars-grid" class="grid grid-cols-2 gap-2.5"></div>
+            </div>
+
+            <div>
+                <h3 class="text-sm font-black text-white mb-2">🎨 مظاهر رقعة الشطرنج</h3>
+                <div id="shop-themes-grid" class="grid grid-cols-2 gap-2.5"></div>
+            </div>
+        </section>
+
+        <section id="tab-challenges" class="hidden space-y-3">
+            <h2 class="text-sm font-black text-white">🎯 التحديات اليومية والمكافآت</h2>
+            <div id="challenges-list" class="space-y-2.5"></div>
+        </section>
+
+        <section id="tab-profile" class="hidden space-y-4">
+            <div class="glass-card p-4 text-center space-y-3">
+                <div class="relative w-20 h-20 mx-auto">
+                    <div id="profile-avatar-wrap" class="w-20 h-20 rounded-full bg-slate-800 border-4 border-amber-400 flex items-center justify-center text-4xl overflow-hidden">
+                        <span id="profile-avatar-emoji">👑</span>
+                        <img id="profile-avatar-img" class="w-full h-full object-cover hidden" alt="profile" />
+                    </div>
+                    <label class="absolute bottom-0 right-0 bg-amber-400 text-slate-950 w-7 h-7 rounded-full flex items-center justify-center text-xs font-black cursor-pointer shadow">
+                        📷
+                        <input type="file" accept="image/*" class="hidden" onchange="uploadCustomAvatar(event)" />
+                    </label>
+                </div>
+
+                <div class="flex items-center justify-center gap-1.5">
+                    <input id="profile-name-input" type="text" maxlength="18" class="bg-slate-950 border border-white/15 rounded-xl px-3 py-1.5 text-center text-sm font-black text-white w-44" />
+                    <button type="button" onclick="saveProfileName()" class="gold-btn px-3 py-1.5 rounded-xl text-xs">حفظ</button>
+                </div>
+
+                <div class="bg-slate-950/80 border border-cyan-500/30 rounded-xl p-2 flex items-center justify-between text-xs">
+                    <span class="text-slate-400">معرفك الخاص للتحدي (ID):</span>
+                    <div class="flex items-center gap-1.5">
+                        <span id="profile-player-id" class="font-black text-cyan-300">RG-0000</span>
+                        <button type="button" onclick="copyMyPlayerID()" class="bg-cyan-500/20 text-cyan-200 px-2 py-0.5 rounded text-[10px] cursor-pointer">نسخ</button>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <div class="flex justify-between text-[11px] font-bold">
+                        <span id="profile-rank-label" class="text-amber-300">مبتدئ 🌱</span>
+                        <span class="text-slate-400">XP: <span id="profile-xp-txt">0</span></span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+                        <div id="profile-xp-bar" class="h-full bg-gradient-to-r from-amber-500 to-yellow-300" style="width: 10%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="glass-card p-3">
+                    <div id="stat-wins" class="text-lg font-black text-emerald-400">0</div>
+                    <div class="text-[10px] text-slate-400">إجمالي الفوز</div>
+                </div>
+                <div class="glass-card p-3">
+                    <div id="stat-streak" class="text-lg font-black text-amber-400">0</div>
+                    <div class="text-[10px] text-slate-400">سلسلة الانتصار</div>
+                </div>
+                <div class="glass-card p-3">
+                    <div id="stat-vip8" class="text-lg font-black text-purple-400">0</div>
+                    <div class="text-[10px] text-slate-400">صدارة VIP8</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <nav class="fixed bottom-0 inset-x-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-white/10">
+        <div class="max-w-lg mx-auto grid grid-cols-4 py-1.5">
+            <button type="button" onclick="switchTab('games')" class="nav-btn flex flex-col items-center py-1 text-amber-400 cursor-pointer" data-tab="games">
+                <span class="text-lg">🎮</span>
+                <span class="text-[10px] font-bold">الألعاب</span>
+            </button>
+            <button type="button" onclick="switchTab('shop')" class="nav-btn flex flex-col items-center py-1 text-slate-400 cursor-pointer" data-tab="shop">
+                <span class="text-lg">🛒</span>
+                <span class="text-[10px] font-bold">المتجر</span>
+            </button>
+            <button type="button" onclick="switchTab('challenges')" class="nav-btn flex flex-col items-center py-1 text-slate-400 cursor-pointer" data-tab="challenges">
+                <span class="text-lg">🎯</span>
+                <span class="text-[10px] font-bold">المهام</span>
+            </button>
+            <button type="button" onclick="switchTab('profile')" class="nav-btn flex flex-col items-center py-1 text-slate-400 cursor-pointer" data-tab="profile">
+                <span class="text-lg">👤</span>
+                <span class="text-[10px] font-bold">ملفي</span>
+            </button>
+        </div>
+    </nav>
+
     <div id="lobby-modal" style="display:none" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-sm p-5 space-y-4 border-amber-500/40">
             <div class="text-center">
@@ -65,7 +338,119 @@
             <button type="button" onclick="closeModal('howto-modal')" class="gold-btn w-full py-2 rounded-xl text-xs">فهمت ✓</button>
         </div>
     </div>
-<!-- ... existing code ... -->
+
+<script>
+const DB_URL = 'https://royal-games-hub-default-rtdb.firebaseio.com';
+const STORAGE_KEY = 'royal_games_hub_v4';
+
+const GAMES_META = {
+    chess:      { name: 'الشطرنج الملكي', icon: '♟️', tag: 'استراتيجية + 3D', desc: 'قوانين كاملة: تبييت، ترقية، كش ملك', rules: 'انقر على قطعتك لإظهار المربعات المتاحة باللون الأخضر ثم انقر على الهدف. احمِ ملكك وحاصر ملك الخصم!' },
+    ludo:       { name: 'اللودو الذهبي', icon: '🎲', tag: 'تحدي النرد', desc: 'ارمِ النرد وحرك أحجارك نحو خط النهاية', rules: 'ارمِ النرد! الرقم 6 يخرج حجرك من القاعدة ويعطيك رمية إضافية. أوصل أحجارك الأربعة للمركز أولاً.' },
+    connect4:   { name: 'أربعة تربح', icon: '🔴', tag: 'تحدي ذكاء', desc: 'كوّن صفاً من 4 أقراص متتالية', rules: 'اختر العمود لإسقاط قرصك الذهبي. الفائز من يجمع 4 أقراص أفقياً أو عمودياً أو قطرياً.' },
+    xo:         { name: 'إكس أو الملكية', icon: '❌', tag: 'سريعة وممتعة', desc: 'تحدى الذكاء الاصطناعي أو صديقك', rules: 'ضع علامتك X لتكوين خط من 3 خانات متتالية قبل الخصم.' },
+    memory:     { name: 'ذاكرة الملوك', icon: '🃏', tag: 'تركيز', desc: 'طابق البطاقات المتشابهة في أقل وقت', rules: 'اقلب بطاقتين في كل مرة للعثور على الأزواج المتطابقة قبل نفاد المحاولات.' },
+    mines:      { name: 'كاسحة الألغام', icon: '💣', tag: 'مغامرة', desc: 'اكشف المربعات الآمنة وتجنب القنابل', rules: 'الأرقام تدل على عدد الألغام المجاورة للمربع. افتح جميع المربعات الآمنة للفوز!' },
+    snake:      { name: 'الثعبان الذهبي', icon: '🐍', tag: 'كلاسيك', desc: 'التهم التفاح الذهبي وضاعف طولك', rules: 'استخدم أزرار الاتجاهات لتوجيه الثعبان نحو التفاح دون الاصطدام بالجدران أو بنفسك.' },
+    rps:        { name: 'حجر ورقة مقص', icon: '✂️', tag: '3 جولات', desc: 'توقع حركة خصمك واحسم المواجهة', rules: 'الحجر يهزم المقص، المقص يهزم الورقة، والورقة تهزم الحجر.' },
+    math:       { name: 'تحدي العباقرة', icon: '🧠', tag: 'سرعة بديهة', desc: 'حل المعادلات قبل انتهاء المؤقت', rules: 'اختر الإجابة الصحيحة بأقصى سرعة لتحقيق أعلى سلسلة إجابات.' },
+    guess:      { name: 'الخزنة السرية', icon: '🔐', tag: 'ألغاز', desc: 'اكتشف الرقم السري من 1 إلى 100', rules: 'أدخل تخمينك وسيخبرك النظام إن كان الرقم السري أكبر أم أصغر.' },
+    simon:      { name: 'سيمون الألوان', icon: '🎨', tag: 'ذاكرة بصرية', desc: 'كرر تسلسل الأضواء والموسيقى', rules: 'راقب ترتيب إضاءة الألوان ثم اضغط عليها بنفس الترتيب تماماً.' },
+    whack:      { name: 'صائد الكنوز', icon: '🔨', tag: 'رد فعل', desc: 'اضغط على الكنوز وتجنب القنابل', rules: 'اضغط بسرعة على الجواهر الذهبية التي تظهر واحذر من القنابل الحمراء!' },
+    blackjack:  { name: 'بلاك جاك 21', icon: '🂡', tag: 'أوراق', desc: 'اقترب من 21 دون تجاوزها', rules: 'اسحب أوراقاً لتقترب من مجموع 21 أكثر من الموزع دون أن تتجاوز 21.' },
+    hilo:       { name: 'أعلى أم أدنى', icon: '📈', tag: 'توقع', desc: 'توقع هل الرقم القادم أعلى أم أقل', rules: 'انظر للرقم الحالي وتوقع هل البطاقة التالية أعلى أم أقل.' },
+    hangman:    { name: 'الكلمة المفقودة', icon: '🔤', tag: 'كلمات', desc: 'خمن حروف الكلمة العربية السرية', rules: 'اختر الحروف لتكشف الكلمة السرية قبل اكتمال المحاولات.' },
+    tower:      { name: 'برج الذهب', icon: '🏗️', tag: 'توقيت', desc: 'أوقف الكتلة في المكان المثالي', rules: 'اضغط لإسقاط الطابق فوق البرج بدقة لبناء أعلى ناطحة سحاب.' }
+};
+
+const AVATARS_SHOP = [
+    { id: 'king', emoji: '👑', name: 'تاج الملك', rarity: 'common', price: 0 },
+    { id: 'ninja', emoji: '🥷', name: 'النينجا الخفي', rarity: 'rare', price: 300 },
+    { id: 'cyber', emoji: '🤖', name: 'سايبورغ 3000', rarity: 'rare', price: 450 },
+    { id: 'dragon', emoji: '🐉', name: 'تنين النار', rarity: 'epic', price: 900 },
+    { id: 'phoenix', emoji: '🦅', name: 'العنقاء الذهبية', rarity: 'epic', price: 1200 },
+    { id: 'emperor', emoji: '🦁', name: 'الإمبراطور', rarity: 'legendary', price: 2000 },
+    { id: 'bloodknight', emoji: '🧛', name: 'فارس الدم', rarity: 'bloody', price: 3500 },
+    { id: 'reaper', emoji: '💀', name: 'حاصد الأرواح', rarity: 'bloody', price: 4000 }
+];
+
+const THEMES_SHOP = [
+    { id: 'classic', name: 'كلاسيك ملكي', light: '#e2e8f0', dark: '#475569', price: 0 },
+    { id: 'emerald', name: 'الزمرد الأخضر', light: '#dcfce7', dark: '#15803d', price: 400 },
+    { id: 'royalwood', name: 'الخشب الفاخر', light: '#fef3c7', dark: '#92400e', price: 600 },
+    { id: 'crimson', name: 'الدموي الملكي', light: '#fee2e2', dark: '#991b1b', price: 1000 }
+];
+
+let state = {
+    playerId: 'RG-' + Math.floor(1000 + Math.random() * 9000),
+    name: 'اللاعب الملكي',
+    coins: 1000,
+    xp: 0,
+    wins: 0,
+    streak: 0,
+    bestStreak: 0,
+    vip8Wins: 0,
+    isVIP: false,
+    avatarId: 'king',
+    customAvatar: null,
+    unlockedAvatars: ['king'],
+    themeId: 'classic',
+    unlockedThemes: ['classic'],
+    dailyDay: 1,
+    lastDailyDate: '',
+    dailyWins: 0,
+    dailyChessWins: 0,
+    claimedChallenges: []
+};
+
+let selectedGameId = 'chess';
+let selectedDifficulty = 'medium';
+let isBetMatch = false;
+let isVIPMatch = false;
+let vipPot = 1000;
+let vipRound = 1;
+let roundNumber = 1;
+let gameActive = false;
+
+let isPvPMode = false;
+let pvpRoomId = null;
+let pvpRole = null;
+let pvpPollTimer = null;
+let lastSyncMoveSeq = 0;
+let pendingIncomingInvite = null;
+
+function loadState() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            state = Object.assign({}, state, parsed);
+        }
+    } catch (e) {}
+}
+
+function saveState() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+}
+
+function playSound(type) {
+    try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        const ctx = new Ctx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        const now = ctx.currentTime;
+        if (type === 'move') { osc.frequency.setValueAtTime(520, now); gain.gain.setValueAtTime(0.08, now); osc.start(now); osc.stop(now + 0.07); }
+        else if (type === 'win') { osc.frequency.setValueAtTime(587, now); osc.frequency.setValueAtTime(880, now + 0.12); gain.gain.setValueAtTime(0.12, now); osc.start(now); osc.stop(now + 0.32); }
+        else if (type === 'lose') { osc.frequency.setValueAtTime(300, now); osc.frequency.setValueAtTime(190, now + 0.15); gain.gain.setValueAtTime(0.1, now); osc.start(now); osc.stop(now + 0.32); }
+        else { osc.frequency.setValueAtTime(660, now); gain.gain.setValueAtTime(0.06, now); osc.start(now); osc.stop(now + 0.06); }
+    } catch (e) {}
+}
+
 function setElVisible(idOrEl, show) {
     const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
     if (!el) return;
@@ -81,7 +466,94 @@ function showToast(msg) {
     clearTimeout(window._toastTimer);
     window._toastTimer = setTimeout(function () { setElVisible(el, false); }, 3200);
 }
-// ... existing code ... -->
+
+function getRankInfo(xp) {
+    if (xp >= 3000) return { title: 'أسطورة الألعاب 👑', level: Math.floor(xp / 250) + 1 };
+    if (xp >= 1500) return { title: 'سيد الاستراتيجية 🔥', level: Math.floor(xp / 250) + 1 };
+    if (xp >= 600) return { title: 'محترف متمرس ⚔️', level: Math.floor(xp / 250) + 1 };
+    return { title: 'مبتدئ 🌱', level: Math.floor(xp / 250) + 1 };
+}
+
+function updateAllUI() {
+    const rank = getRankInfo(state.xp);
+    document.getElementById('header-name').textContent = state.name;
+    document.getElementById('header-coins').textContent = state.coins.toLocaleString();
+    document.getElementById('header-title').textContent = rank.title;
+    document.getElementById('header-level').textContent = rank.level;
+    document.getElementById('header-vip-badge').classList.toggle('hidden', !state.isVIP);
+
+    const avObj = AVATARS_SHOP.find(function (a) { return a.id === state.avatarId; }) || AVATARS_SHOP[0];
+    const hEmoji = document.getElementById('header-avatar-emoji');
+    const hImg = document.getElementById('header-avatar-img');
+    const pEmoji = document.getElementById('profile-avatar-emoji');
+    const pImg = document.getElementById('profile-avatar-img');
+
+    if (state.customAvatar) {
+        hEmoji.classList.add('hidden');
+        hImg.src = state.customAvatar;
+        hImg.classList.remove('hidden');
+        pEmoji.classList.add('hidden');
+        pImg.src = state.customAvatar;
+        pImg.classList.remove('hidden');
+    } else {
+        hImg.classList.add('hidden');
+        hEmoji.textContent = avObj.emoji;
+        hEmoji.classList.remove('hidden');
+        pImg.classList.add('hidden');
+        pEmoji.textContent = avObj.emoji;
+        pEmoji.classList.remove('hidden');
+    }
+
+    document.getElementById('profile-name-input').value = state.name;
+    document.getElementById('profile-player-id').textContent = state.playerId;
+    document.getElementById('profile-rank-label').textContent = rank.title;
+    document.getElementById('profile-xp-txt').textContent = state.xp;
+    document.getElementById('profile-xp-bar').style.width = Math.min(100, (state.xp % 250) / 2.5) + '%';
+    document.getElementById('stat-wins').textContent = state.wins;
+    document.getElementById('stat-streak').textContent = state.bestStreak;
+    document.getElementById('stat-vip8').textContent = state.vip8Wins;
+
+    const todayStr = new Date().toDateString();
+    const dailyBtn = document.getElementById('claim-daily-btn');
+    document.getElementById('daily-day-num').textContent = state.dailyDay;
+    if (state.lastDailyDate === todayStr) {
+        dailyBtn.textContent = 'تم الاستلام ✓';
+        dailyBtn.classList.add('opacity-50');
+    } else {
+        const reward = 100 + state.dailyDay * 50;
+        dailyBtn.textContent = 'استلم ' + reward + ' 🪙';
+        dailyBtn.classList.remove('opacity-50');
+    }
+
+    if (state.isVIP) {
+        const vBtn = document.getElementById('buy-vip-btn');
+        vBtn.textContent = 'مُفعّل ✓';
+        vBtn.classList.add('opacity-60');
+    }
+
+    renderGamesGrid();
+    renderShop();
+    renderChallenges();
+}
+
+function renderGamesGrid() {
+    const grid = document.getElementById('games-grid');
+    if (!grid) return;
+    grid.innerHTML = Object.keys(GAMES_META).map(function (id) {
+        const g = GAMES_META[id];
+        return '<div role="button" tabindex="0" onclick="openGameLobby(\'' + id + '\')" class="game-card-item glass-card p-3 flex flex-col justify-between gap-2 hover:border-amber-400/60 active:scale-95 transition cursor-pointer">' +
+            '<div class="flex items-start justify-between">' +
+                '<span class="text-3xl">' + g.icon + '</span>' +
+                '<span class="text-[9px] bg-amber-500/15 text-amber-300 px-2 py-0.5 rounded-full font-bold">' + g.tag + '</span>' +
+            '</div>' +
+            '<div>' +
+                '<div class="text-xs font-black text-white">' + g.name + '</div>' +
+                '<div class="text-[10px] text-slate-400 line-clamp-1">' + g.desc + '</div>' +
+            '</div>' +
+        '</div>';
+    }).join('');
+}
+
 function switchTab(tabName) {
     ['games', 'arena', 'shop', 'challenges', 'profile'].forEach(function (t) {
         setElVisible('tab-' + t, t === tabName);
@@ -114,14 +586,194 @@ function openGameLobby(gId) {
     setElVisible('lobby-modal', true);
     playSound('turn');
 }
-// ... existing code ... -->
+
+function selectDifficulty(diff) {
+    selectedDifficulty = diff;
+    document.querySelectorAll('.diff-btn').forEach(function (btn) {
+        const isSel = btn.dataset.diff === diff;
+        btn.classList.toggle('border-amber-400', isSel);
+        btn.classList.toggle('border-slate-600', !isSel);
+    });
+    playSound('move');
+}
+
+function launchSelectedGame() {
+    closeModal('lobby-modal');
+    startGameSession();
+}
+
+function startBetMatch() {
+    if (state.coins < 100) {
+        showToast('رصيدك غير كافٍ للرهان (تحتاج 100 🪙)');
+        return;
+    }
+    state.coins -= 100;
+    isBetMatch = true;
+    saveState();
+    updateAllUI();
+    closeModal('lobby-modal');
+    startGameSession();
+}
+
+function enterVIP8Room() {
+    const val = parseInt(document.getElementById('vip-bet-input').value, 10) || 0;
+    if (val < 1000) {
+        showToast('الحد الأدنى لدخول غرفة كبار الشخصيات هو 1,000 🪙');
+        return;
+    }
+    if (state.coins < val) {
+        showToast('رصيدك الحالي أقل من مبلغ الرهان!');
+        return;
+    }
+    state.coins -= val;
+    saveState();
+    updateAllUI();
+
+    isVIPMatch = true;
+    isPvPMode = false;
+    isBetMatch = false;
+    vipPot = val;
+    vipRound = 1;
+    selectedGameId = 'chess';
+    selectedDifficulty = 'hard';
+    startGameSession();
+}
+
 function openHowToPlay() {
     const g = GAMES_META[selectedGameId] || GAMES_META.chess;
     document.getElementById('howto-title').textContent = 'قواعد ' + g.name;
     document.getElementById('howto-body').textContent = g.rules;
     setElVisible('howto-modal', true);
 }
-// ... existing code ... -->
+
+function exitArena() {
+    gameActive = false;
+    stopPvPPolling();
+    isPvPMode = false;
+    isVIPMatch = false;
+    switchTab('games');
+}
+
+function restartCurrentRound() {
+    if (isPvPMode) {
+        showToast('لا يمكن إعادة الجولة أثناء التحدي المباشر مع صديق');
+        return;
+    }
+    startGameSession();
+}
+
+function surrenderMatch() {
+    if (!gameActive) return;
+    endGameSession(false, 'لقد انسحبت من المواجهة');
+}
+
+function nextRoundSameGame() {
+    closeModal('result-modal');
+    if (isVIPMatch) {
+        vipRound++;
+    } else {
+        roundNumber++;
+    }
+    startGameSession();
+}
+
+function closeResultAndExit() {
+    closeModal('result-modal');
+    exitArena();
+}
+
+function startGameSession() {
+    switchTab('arena');
+    gameActive = true;
+
+    const g = GAMES_META[selectedGameId] || GAMES_META.chess;
+    document.getElementById('arena-game-title').textContent = g.icon + ' ' + g.name;
+
+    const pvpBar = document.getElementById('pvp-status-bar');
+    const vipBar = document.getElementById('vip8-status-bar');
+    pvpBar.classList.add('hidden');
+    vipBar.classList.add('hidden');
+
+    if (isPvPMode) {
+        pvpBar.classList.remove('hidden');
+        document.getElementById('pvp-room-label').textContent = 'غرفة مباشرة #' + pvpRoomId;
+        document.getElementById('arena-sub-info').textContent = pvpRole === 'host' ? 'أنت المضيف (اللون الأول)' : 'أنت الضيف (اللون الثاني)';
+        document.getElementById('opp-avatar').textContent = '👤';
+        document.getElementById('opp-name').textContent = 'صديقك المباشر';
+    } else if (isVIPMatch) {
+        vipBar.classList.remove('hidden');
+        document.getElementById('vip8-round-txt').textContent = vipRound;
+        document.getElementById('vip8-pot-txt').textContent = vipPot.toLocaleString();
+        document.getElementById('arena-sub-info').textContent = 'غرفة VIP • الجولة ' + vipRound + ' من 8';
+        document.getElementById('opp-avatar').textContent = '👑';
+        document.getElementById('opp-name').textContent = 'بطل VIP';
+    } else {
+        document.getElementById('arena-sub-info').textContent = 'الجولة ' + roundNumber + ' • مستوى ' + selectedDifficulty;
+        document.getElementById('opp-avatar').textContent = '🤖';
+        document.getElementById('opp-name').textContent = 'الذكاء الاصطناعي';
+    }
+
+    const container = document.getElementById('arena-board-container');
+    container.innerHTML = '';
+
+    if (selectedGameId === 'chess') initChessGame(container);
+    else if (selectedGameId === 'connect4') initConnect4Game(container);
+    else if (selectedGameId === 'xo') initXOGame(container);
+    else if (selectedGameId === 'ludo') initLudoGame(container);
+    else if (selectedGameId === 'memory') initMemoryGame(container);
+    else if (selectedGameId === 'mines') initMinesGame(container);
+    else if (selectedGameId === 'snake') initSnakeGame(container);
+    else if (selectedGameId === 'rps') initRPSGame(container);
+    else if (selectedGameId === 'math') initMathGame(container);
+    else if (selectedGameId === 'guess') initGuessGame(container);
+    else if (selectedGameId === 'simon') initSimonGame(container);
+    else if (selectedGameId === 'whack') initWhackGame(container);
+    else if (selectedGameId === 'blackjack') initBlackjackGame(container);
+    else if (selectedGameId === 'hilo') initHiLoGame(container);
+    else if (selectedGameId === 'hangman') initHangmanGame(container);
+    else if (selectedGameId === 'tower') initTowerGame(container);
+}
+
+function setTurnIndicator(isMyTurn, customText) {
+    const badge = document.getElementById('turn-badge');
+    if (!badge) return;
+    if (isMyTurn) {
+        badge.textContent = customText || 'دورك الآن';
+        badge.className = 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 px-3 py-1 rounded-full text-xs font-black turn-glow';
+    } else {
+        badge.textContent = customText || 'دور الخصم...';
+        badge.className = 'bg-amber-500/20 border border-amber-400/50 text-amber-300 px-3 py-1 rounded-full text-xs font-black';
+    }
+}
+
+function endGameSession(didWin, reasonText) {
+    if (!gameActive) return;
+    gameActive = false;
+    stopPvPPolling();
+
+    playSound(didWin ? 'win' : 'lose');
+
+    if (isVIPMatch) {
+        let rewardXp = didWin ? 100 : 25;
+        state.xp += rewardXp;
+
+        if (didWin) {
+            vipPot = vipPot * 2;
+            state.wins++;
+            state.streak++;
+            if (state.streak > state.bestStreak) state.bestStreak = state.streak;
+
+            if (vipRound >= 8) {
+                state.coins += vipPot;
+                state.vip8Wins++;
+                isVIPMatch = false;
+                vipRound = 1;
+                saveState();
+                updateAllUI();
+                document.getElementById('res-emoji').textContent = '👑';
+                document.getElementById('res-title').textContent = 'بطل صدارة كبار الشخصيات!';
+                document.getElementById('res-sub').textContent = 'أتممت 8 جولات بنجاح وحصدت الجائزة الكبرى!';
+                document.getElementById('res-reward-box').textContent = '+' + vipPot.toLocaleString() + ' 🪙 • +' + rewardXp + ' XP';
                 document.getElementById('res-next-btn').textContent = 'مباراة جديدة ▶';
                 setElVisible('result-modal', true);
                 return;
@@ -197,41 +849,90 @@ function openHowToPlay() {
     document.getElementById('res-next-btn').textContent = 'الجولة التالية ⏭️';
     setElVisible('result-modal', true);
 }
-// ... existing code ... -->
-        if (selected && legalMoves.some(function (m) { return m[0] === r && m[1] === c; })) {
-            const p = board[selected[0]][selected[1]];
-            if (p[1] === 'P' && (r === 0 || r === 7)) {
-                pendingPromo = { fr: selected[0], fc: selected[1], tr: r, tc: c };
-                setElVisible('promotion-modal', true);
-                return;
-            }
-            commitMove(selected[0], selected[1], r, c, null, false);
-            return;
+
+/* ==================== 1. نظام التحدي المباشر (Firebase REST) ==================== */
+async function createDirectPvPRoom() {
+    const gameId = document.getElementById('pvp-game-select').value;
+    const targetId = (document.getElementById('pvp-target-id').value || '').trim().toUpperCase();
+    const roomCode = String(Math.floor(10000 + Math.random() * 90000));
+
+    selectedGameId = gameId;
+    isPvPMode = true;
+    pvpRole = 'host';
+    pvpRoomId = roomCode;
+    isBetMatch = false;
+    isVIPMatch = false;
+    lastSyncMoveSeq = 0;
+
+    const payload = {
+        gameId: gameId,
+        hostId: state.playerId,
+        hostName: state.name,
+        guestJoined: false,
+        moveSeq: 0,
+        lastMove: null,
+        createdAt: Date.now()
+    };
+
+    try {
+        await fetch(DB_URL + '/rooms/' + roomCode + '.json', {
+            method: 'PUT',
+            body: JSON.stringify(payload)
+        });
+
+        if (targetId && targetId.startsWith('RG-')) {
+            await fetch(DB_URL + '/invites/' + targetId + '.json', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    roomCode: roomCode,
+                    gameId: gameId,
+                    fromName: state.name,
+                    ts: Date.now()
+                })
+            });
         }
-// ... existing code ... -->
-function initAppSafe() {
-    if (window._appBooted) return;
-    window._appBooted = true;
-    loadState();
-    updateAllUI();
-    initPersonalInboxListener();
-    let touchMoved = false;
-    document.addEventListener('touchstart', function () { touchMoved = false; }, { passive: true });
-    document.addEventListener('touchmove', function () { touchMoved = true; }, { passive: true });
-    document.addEventListener('touchend', function (e) {
-        if (touchMoved) return;
-        const target = e.target.closest('button, [role="button"], .game-card-item, .nav-btn');
-        if (target && typeof target.click === 'function') {
-            e.preventDefault();
-            target.click();
-        }
-    }, { passive: false });
+        showToast('تم إنشاء الغرفة #' + roomCode + ' — شارك الرقم مع صديقك!');
+        startGameSession();
+        startPvPPolling();
+    } catch (e) {
+        showToast('تعذر الاتصال بالخادم، تحقق من الإنترنت');
+    }
 }
 
-document.addEventListener('DOMContentLoaded', initAppSafe);
-if (document.readyState !== 'loading') {
-    initAppSafe();
+async function joinDirectPvPRoom() {
+    const roomCode = (document.getElementById('pvp-join-code').value || '').trim();
+    if (roomCode.length < 4) {
+        showToast('أدخل رقم الغرفة المكون من 5 أرقام');
+        return;
+    }
+    try {
+        const res = await fetch(DB_URL + '/rooms/' + roomCode + '.json');
+        const data = await res.json();
+        if (!data || !data.gameId) {
+            showToast('لم يتم العثور على غرفة بهذا الرقم!');
+            return;
+        }
+        selectedGameId = data.gameId;
+        isPvPMode = true;
+        pvpRole = 'guest';
+        pvpRoomId = roomCode;
+        isBetMatch = false;
+        isVIPMatch = false;
+        lastSyncMoveSeq = data.moveSeq || 0;
+
+        await fetch(DB_URL + '/rooms/' + roomCode + '.json', {
+            method: 'PATCH',
+            body: JSON.stringify({ guestJoined: true, guestName: state.name })
+        });
+
+        showToast('تم الانضمام لغرفة ' + (data.hostName || 'صديقك') + '!');
+        startGameSession();
+        startPvPPolling();
+    } catch (e) {
+        showToast('خطأ أثناء الانضمام للغرفة');
+    }
 }
-</script>
-</body>
-            </html>
+
+function copyPvPRoomCode() {
+    if (!pvpRoomId) return;
+    navigator.clipboard?.writeText
