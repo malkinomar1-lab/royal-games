@@ -9,7 +9,7 @@
     <style>
         * { font-family: 'Cairo', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: radial-gradient(circle at top, #1e1b4b 0%, #090d16 70%); color: #f8fafc; min-height: 100vh; overflow-x: hidden; margin: 0; padding-bottom: 84px; touch-action: manipulation; }
-        button, [role="button"], .game-card-item { cursor: pointer; touch-action: manipulation; user-select: none; }
+        button, [role="button"], .game-card-item { cursor: pointer; touch-action: manipulation; user-select: none; position: relative; z-index: 2; }
         .glass-card { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.25rem; }
         .gold-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: #090d16; font-weight: 900; box-shadow: 0 4px 16px rgba(245, 158, 11, 0.35); transition: transform 0.15s; cursor: pointer; }
         .gold-btn:active { transform: scale(0.96); }
@@ -39,7 +39,6 @@
 </head>
 <body>
 
-    <!-- الشريط العلوي -->
     <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-white/10 px-3 py-2.5">
         <div class="max-w-lg mx-auto flex items-center justify-between gap-2">
             <div role="button" tabindex="0" class="flex items-center gap-2.5 cursor-pointer" onclick="switchTab('profile')">
@@ -67,10 +66,8 @@
         </div>
     </header>
 
-    <!-- إشعار عام -->
     <div id="toast-msg" class="pointer-events-none fixed top-16 left-1/2 -translate-x-1/2 z-[120] hidden bg-slate-900/95 border border-amber-400/60 text-white px-4 py-2 rounded-full text-xs font-bold shadow-2xl whitespace-nowrap"></div>
 
-    <!-- إشعار دعوة تحدي فورية من صديق -->
     <div id="incoming-invite-banner" class="hidden fixed top-14 inset-x-3 max-w-lg mx-auto z-[110] glass-card p-3 border-2 border-cyan-400 bg-slate-950/95 shadow-2xl flex items-center justify-between gap-2">
         <div>
             <div class="text-xs font-black text-cyan-300">⚔️ دعوة تحدي مباشر!</div>
@@ -82,12 +79,9 @@
         </div>
     </div>
 
-    <!-- المحتوى الرئيسي -->
     <main class="max-w-lg mx-auto p-3 space-y-4">
 
-        <!-- 1. قسم الألعاب -->
         <section id="tab-games" class="space-y-3">
-            <!-- شريط الحضور اليومي -->
             <div class="glass-card p-3 flex items-center justify-between border-amber-500/30">
                 <div>
                     <div class="text-xs font-black text-amber-300">🎁 مكافأة الحضور اليومي (يوم <span id="daily-day-num">1</span>/7)</div>
@@ -96,7 +90,6 @@
                 <button type="button" id="claim-daily-btn" onclick="claimDailyLogin()" class="gold-btn px-3 py-1.5 rounded-xl text-xs">استلم 150 🪙</button>
             </div>
 
-            <!-- تحدي الأصدقاء المباشر بالـ ID -->
             <div class="glass-card p-3 space-y-2 border-cyan-500/30">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-black text-cyan-300">⚔️ تحدي صديق مباشر (1 ضد 1)</span>
@@ -126,7 +119,6 @@
                 </div>
             </div>
 
-            <!-- غرفة VIP للرهانات الكبرى (8 جولات + مضاعفة) -->
             <div class="glass-card p-3 space-y-2.5 bg-gradient-to-r from-amber-950/60 to-red-950/50 border-amber-400/40">
                 <div class="flex items-center justify-between">
                     <div>
@@ -141,7 +133,6 @@
                 </div>
             </div>
 
-            <!-- شبكة الألعاب الـ 16 مضمّنة مباشرة في الصفحة -->
             <div class="flex items-center justify-between pt-1">
                 <h2 class="text-sm font-black text-white">🎮 مكتبة الألعاب (16 لعبة)</h2>
                 <span class="text-[10px] text-slate-400">اختر لعبتك للبدء</span>
@@ -214,7 +205,6 @@
             </div>
         </section>
 
-        <!-- 2. ساحة اللعب -->
         <section id="tab-arena" class="hidden space-y-2.5">
             <div class="flex items-center justify-between gap-2">
                 <button type="button" onclick="exitArenaToGames()" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">🔙 خروج</button>
@@ -259,7 +249,6 @@
             <div id="game-stage" class="glass-card p-3 min-h-[340px] flex flex-col items-center justify-center"></div>
         </section>
 
-        <!-- 3. قسم المتجر -->
         <section id="tab-shop" class="hidden space-y-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-base font-black text-amber-400">🛍️ المتجر الملكي الفاخر</h2>
@@ -290,7 +279,6 @@
             <div id="shop-items-grid" class="grid grid-cols-2 gap-2.5"></div>
         </section>
 
-        <!-- 4. قسم التحديات والمهام اليومية -->
         <section id="tab-challenges" class="hidden space-y-3">
             <div class="flex items-center justify-between">
                 <h2 class="text-base font-black text-amber-400">🎯 المهام والجوائز اليومية</h2>
@@ -313,7 +301,6 @@
             <div id="daily-missions-list" class="space-y-2"></div>
         </section>
 
-        <!-- 5. قسم ملفي -->
         <section id="tab-profile" class="hidden space-y-3">
             <div class="glass-card p-4 text-center space-y-2.5 relative">
                 <div class="relative w-20 h-20 mx-auto">
@@ -341,7 +328,6 @@
                 </div>
             </div>
 
-            <!-- الحساب السحابي المشترك بين الجوالات -->
             <div class="glass-card p-3 space-y-2 border-emerald-500/40 bg-emerald-950/20">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-black text-emerald-300">☁️ الحساب السحابي المشترك (للدخول من أي جوال)</span>
@@ -357,7 +343,6 @@
                 </div>
             </div>
 
-            <!-- إحصائيات -->
             <div class="grid grid-cols-3 gap-2 text-center">
                 <div class="glass-card p-2.5">
                     <div id="stat-wins" class="text-base font-black text-emerald-400">0</div>
@@ -373,7 +358,6 @@
                 </div>
             </div>
 
-            <!-- الخزنة الذهبية -->
             <div class="glass-card p-3 space-y-2 border-amber-500/30">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-black text-amber-300">🏦 الخزنة الذهبية (إيداع شهري • ربح +5%)</span>
@@ -387,7 +371,6 @@
                 </div>
             </div>
 
-            <!-- تحويل العملات لصديق عبر الـ ID -->
             <div class="glass-card p-3 space-y-2 border-cyan-500/30">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-black text-cyan-300">💸 تحويل عملات لصديق عبر الـ ID</span>
@@ -411,7 +394,6 @@
                 </div>
             </div>
 
-            <!-- النسخ الاحتياطي ونقل الحساب -->
             <div class="glass-card p-3 space-y-2">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-black text-white">🔐 النسخ الاحتياطي ونقل الحساب المشفر</span>
@@ -426,7 +408,6 @@
         </section>
     </main>
 
-    <!-- الشريط السفلي للتنقل -->
     <nav class="fixed bottom-0 inset-x-0 z-50 bg-slate-950/95 backdrop-blur-lg border-t border-white/10 px-2 py-2">
         <div class="max-w-lg mx-auto grid grid-cols-4 gap-1 text-center">
             <button type="button" onclick="switchTab('games')" class="nav-btn text-amber-400 flex flex-col items-center py-1 cursor-pointer" data-tab="games">
@@ -444,7 +425,6 @@
         </div>
     </nav>
 
-    <!-- نافذة اختيار مستوى الصعوبة -->
     <div id="lobby-modal" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-sm p-5 space-y-4 border-amber-500/40">
             <div class="text-center">
@@ -466,7 +446,6 @@
         </div>
     </div>
 
-    <!-- نافذة نتيجة المباراة -->
     <div id="result-modal" class="hidden fixed inset-0 z-[95] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-sm p-5 text-center space-y-3 border-amber-400/50">
             <div id="res-emoji" class="text-5xl">🏆</div>
@@ -480,7 +459,6 @@
         </div>
     </div>
 
-    <!-- نافذة ترقية البيدق بالشطرنج -->
     <div id="promotion-modal" class="hidden fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4">
         <div class="glass-card p-4 text-center space-y-3 border-amber-400">
             <div class="text-sm font-black text-amber-300">👑 اختر قطعة الترقية</div>
@@ -493,7 +471,6 @@
         </div>
     </div>
 
-    <!-- نافذة قواعد اللعبة -->
     <div id="howto-modal" class="hidden fixed inset-0 z-[95] bg-black/80 flex items-center justify-center p-4">
         <div class="glass-card w-full max-w-sm p-5 space-y-3">
             <h3 id="howto-title" class="text-base font-black text-amber-400">قواعد اللعبة</h3>
@@ -563,4 +540,40 @@ let state = {
     dailyDay: 1,
     lastDailyDate: '',
     lastWheelDate: '',
-    soundOn: t
+    soundOn: true,
+    ownedItems: [],
+    equipped: { chess: '', pool: '', cards: '', cars: '', frames: '' },
+    dailyResetKey: '',
+    dailyWins: 0,
+    dailyChessWins: 0,
+    dailyBetOrVipPlays: 0,
+    claimedDailyMissions: []
+};
+
+let selectedGameId = 'chess';
+let selectedDifficulty = 'medium';
+let currentOpponent = OPPONENTS[0];
+let roundNumber = 1;
+let isBetMatch = false;
+let isVIPMatch = false;
+let vipRound = 1;
+let vipPot = 0;
+let shopCategory = 'all';
+
+let isPvPMode = false;
+let pvpRole = null;
+let pvpRoomId = null;
+let pvpMoveSeq = 0;
+let liveRoomEventSource = null;
+let liveInboxEventSource = null;
+let pendingIncomingInvite = null;
+
+function encodeB64Utf8(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+}
+
+function decodeB64Utf8(b64) {
+    const bin = at
