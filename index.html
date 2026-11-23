@@ -1,918 +1,652 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" translate="no" class="notranslate">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="google" content="notranslate" />
-    <title>Royal Games Hub | منصة الألعاب الفاخرة</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamersEscrow | منصة وساطة وبيع حسابات الألعاب الآمنة</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Tajawal -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
     <style>
-        :root {
-            --bg-obsidian: #050811;
-            --bg-elevated: #0c1324;
-            --gold-primary: #fbbf24;
-            --gold-deep: #b45309;
-            --cyan-accent: #22d3ee;
-            --emerald-accent: #10b981;
-        }
-
-        * {
-            font-family: 'Cairo', sans-serif;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        input, textarea {
-            user-select: text;
-        }
-
         body {
-            background:
-                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(251, 191, 36, 0.14), transparent 65%),
-                radial-gradient(ellipse 60% 40% at 85% 20%, rgba(34, 211, 238, 0.08), transparent 60%),
-                linear-gradient(180deg, #070b16 0%, #03060e 100%);
-            color: #f8fafc;
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
         }
-
-        .luxury-panel {
-            background: linear-gradient(145deg, rgba(17, 25, 46, 0.92), rgba(8, 13, 26, 0.96));
-            border: 1px solid rgba(251, 191, 36, 0.16);
-            box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            backdrop-filter: blur(14px);
-        }
-
-        .luxury-panel-cyan {
-            background: linear-gradient(145deg, rgba(10, 28, 44, 0.92), rgba(6, 14, 28, 0.96));
-            border: 1px solid rgba(34, 211, 238, 0.28);
-            box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(34, 211, 238, 0.14);
-            border-radius: 20px;
-            backdrop-filter: blur(14px);
-        }
-
-        .luxury-panel-vip {
-            background: linear-gradient(145deg, rgba(38, 25, 8, 0.92), rgba(14, 12, 24, 0.96));
-            border: 1px solid rgba(251, 191, 36, 0.36);
-            box-shadow: 0 14px 36px -8px rgba(245, 158, 11, 0.16), inset 0 1px 0 rgba(253, 224, 71, 0.2);
-            border-radius: 20px;
-            backdrop-filter: blur(14px);
-        }
-
-        .btn-gold-luxury {
-            background: linear-gradient(135deg, #fde68a 0%, #f59e0b 48%, #b45309 100%);
-            color: #090d16;
-            font-weight: 900;
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.65);
-            transition: transform 0.14s ease, box-shadow 0.2s ease, filter 0.2s ease;
-        }
-
-        .btn-gold-luxury:hover {
-            filter: brightness(1.06);
-            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.48);
-        }
-
-        .btn-gold-luxury:active {
-            transform: scale(0.96);
-        }
-
-        .game-tile {
-            position: relative;
-            background: linear-gradient(160deg, rgba(22, 32, 58, 0.88), rgba(9, 14, 28, 0.95));
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease, box-shadow 0.2s ease;
-            overflow: hidden;
         }
-
-        .game-tile::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at top right, rgba(251, 191, 36, 0.14), transparent 60%);
-            opacity: 0;
-            transition: opacity 0.25s ease;
-            pointer-events: none;
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-
-        .game-tile:hover {
-            transform: translateY(-2px);
-            border-color: rgba(251, 191, 36, 0.45);
-            box-shadow: 0 12px 26px -6px rgba(0, 0, 0, 0.75);
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
         }
-
-        .game-tile:hover::before {
-            opacity: 1;
-        }
-
-        .game-tile:active {
-            transform: scale(0.96);
-        }
-
-        .chess-board-3d {
-            display: grid;
-            grid-template-columns: repeat(8, 1fr);
-            width: 100%;
-            max-width: 376px;
-            aspect-ratio: 1 / 1;
-            border: 3px solid rgba(251, 191, 36, 0.85);
-            border-radius: 14px;
-            overflow: hidden;
-            margin: 0 auto;
-            box-shadow: 0 18px 36px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
-        }
-
-        .chess-sq {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(1.3rem, 6vw, 1.95rem);
-            position: relative;
-            transition: background-color 0.15s ease;
-        }
-
-        .sq-sel {
-            box-shadow: inset 0 0 0 3px #fbbf24;
-            background: rgba(251, 191, 36, 0.42) !important;
-        }
-
-        .sq-hint::after {
-            content: '';
-            width: 32%;
-            height: 32%;
-            border-radius: 50%;
-            background: radial-gradient(circle, #34d399, #059669);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.85);
-        }
-
-        .piece-w {
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.9);
-            filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6));
-        }
-
-        .piece-b {
-            color: #0b1120;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.75);
-        }
-
-        .c4-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            background: linear-gradient(180deg, #1d4ed8, #1e3a8a);
-            padding: 10px;
-            border-radius: 18px;
-            width: 100%;
-            max-width: 368px;
-            margin: 0 auto;
-            border: 1px solid rgba(147, 197, 253, 0.35);
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.65);
-        }
-
-        .c4-cell {
-            aspect-ratio: 1 / 1;
-            border-radius: 50%;
-            background: #060b19;
-            box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.85);
-        }
-
-        .c4-p1 {
-            background: radial-gradient(circle at 32% 28%, #fef08a, #eab308 65%, #a16207);
-            box-shadow: 0 2px 8px rgba(250, 204, 21, 0.55);
-        }
-
-        .c4-p2 {
-            background: radial-gradient(circle at 32% 28%, #fca5a5, #ef4444 65%, #991b1b);
-            box-shadow: 0 2px 8px rgba(248, 113, 113, 0.55);
-        }
-
-        .xo-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            width: 100%;
-            max-width: 308px;
-            margin: 0 auto;
-        }
-
-        .xo-cell {
-            aspect-ratio: 1 / 1;
-            background: linear-gradient(145deg, rgba(25, 37, 66, 0.9), rgba(11, 17, 32, 0.96));
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 18px;
-            font-size: 2.7rem;
-            font-weight: 900;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
-        }
-
-        .rarity-common { border-color: rgba(148, 163, 184, 0.45); }
-        .rarity-rare { border-color: rgba(56, 189, 248, 0.55); }
-        .rarity-epic { border-color: rgba(192, 132, 252, 0.6); }
-        .rarity-legendary { border-color: rgba(251, 191, 36, 0.75); box-shadow: 0 0 18px rgba(245, 158, 11, 0.18); }
-        .rarity-bloody { border-color: rgba(244, 63, 94, 0.75); box-shadow: 0 0 20px rgba(244, 63, 94, 0.24); }
-
-        @keyframes subtlePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-        }
-
-        .turn-pill-active {
-            animation: subtlePulse 1.6s ease-in-out infinite;
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
         }
     </style>
 </head>
-<body class="pb-24 antialiased selection:bg-amber-400 selection:text-slate-950">
+<body class="min-h-screen flex flex-col justify-between selection:bg-purple-500 selection:text-white">
 
-    <!-- الشريط العلوي الفاخر -->
-    <header class="sticky top-0 z-40 bg-[#050811]/90 backdrop-blur-xl border-b border-amber-400/15 px-3.5 py-2.5">
-        <div class="max-w-lg mx-auto flex items-center justify-between gap-2">
-            <button type="button" data-action="tab" data-val="profile" class="flex items-center gap-2.5 text-right group cursor-pointer">
-                <div class="relative w-11 h-11 rounded-full p-[2px] bg-gradient-to-tr from-amber-500 via-yellow-200 to-amber-600 shadow-lg shadow-amber-500/20 shrink-0">
-                    <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-xl overflow-hidden">
-                        <span id="header-avatar-emoji">👑</span>
-                        <img id="header-avatar-img" class="w-full h-full object-cover hidden" alt="avatar" onerror="this.classList.add('hidden'); document.getElementById('header-avatar-emoji').classList.remove('hidden');" />
-                    </div>
+    <div id="app" class="flex-grow flex flex-col min-h-screen">
+        
+        <!-- TOP SECURITY BAR & QUICK SUPPORT LINK -->
+        <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-xs py-2 px-4 border-b border-purple-500/20">
+            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-slate-300">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        {{ currentLang === 'ar' ? 'نظام الضامن التلقائي متصل (Papara Escrow)' : 'Papara Otomatik Güvence Sistemi Aktif' }}
+                    </span>
+                    <span class="hidden md:inline text-slate-400">| {{ t('commissionNotice') }}</span>
                 </div>
-                <div>
-                    <div class="flex items-center gap-1.5">
-                        <span id="header-name" class="text-xs font-black text-white tracking-wide">اللاعب الملكي</span>
-                        <span id="header-vip-badge" class="hidden text-[9px] bg-gradient-to-r from-amber-300 to-amber-500 text-slate-950 font-black px-1.5 py-0.5 rounded-md">VIP</span>
-                    </div>
-                    <div class="text-[10px] text-amber-300/90 font-bold flex items-center gap-1">
-                        <span id="header-title">مبتدئ</span>
-                        <span class="text-slate-600">•</span>
-                        <span>مستوى <strong id="header-level" class="text-white">1</strong></span>
-                    </div>
-                </div>
-            </button>
-
-            <div class="bg-gradient-to-r from-slate-900 to-amber-950/40 border border-amber-400/35 px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-inner">
-                <svg class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.22"/>
-                    <path d="M12 3a9 9 0 1 0 9 9 9.01 9.01 0 0 0-9-9zm.75 13.5v1.25h-1.5V16.5c-1.35-.18-2.4-.95-2.55-2.25h1.55c.14.58.65.95 1.35.95.8 0 1.3-.38 1.3-.92 0-.55-.42-.85-1.52-1.12-1.35-.32-2.2-.85-2.2-2.05 0-1.15.88-1.95 2.2-2.12V6.25h1.5V7.5c1.18.18 2.02.88 2.2 2.02h-1.52c-.15-.5-.58-.8-1.18-.8-.72 0-1.18.35-1.18.85 0 .52.42.8 1.55 1.08 1.35.32 2.18.88 2.18 2.1 0 1.22-.92 2.02-2.25 2.23z"/>
-                </svg>
-                <span id="header-coins" class="text-xs font-black text-amber-300 tabular-nums">1,000</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- إشعار منبثق -->
-    <div id="toast-msg" style="display:none" class="pointer-events-none fixed top-16 left-1/2 -translate-x-1/2 z-[120] hidden bg-slate-900/95 border border-amber-400/60 text-amber-100 px-4 py-2 rounded-full text-xs font-bold shadow-2xl whitespace-nowrap"></div>
-
-    <!-- دعوة تحدي مباشر -->
-    <div id="incoming-invite-banner" style="display:none" class="hidden fixed top-14 inset-x-3 max-w-lg mx-auto z-[110] luxury-panel-cyan p-3.5 shadow-2xl flex items-center justify-between gap-2">
-        <div>
-            <div class="text-xs font-black text-cyan-300">دعوة تحدي مباشر</div>
-            <div id="incoming-invite-text" class="text-[11px] text-white font-bold">صديقك يدعوك للعب الآن</div>
-        </div>
-        <div class="flex gap-1.5">
-            <button type="button" data-action="decline-invite" class="bg-slate-800/90 border border-white/10 text-slate-300 px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">رفض</button>
-            <button type="button" data-action="accept-invite" class="bg-emerald-400 text-slate-950 px-3.5 py-1.5 rounded-xl text-xs font-black cursor-pointer">قبول</button>
-        </div>
-    </div>
-
-    <!-- المحتوى الرئيسي -->
-    <main class="max-w-lg mx-auto px-3.5 pt-3.5 space-y-4">
-
-        <!-- تبويب الألعاب -->
-        <section id="tab-games" class="space-y-4">
-
-            <!-- المكافأة اليومية -->
-            <div class="luxury-panel p-3.5 flex items-center justify-between gap-3">
-                <div class="space-y-0.5">
-                    <div class="text-xs font-black text-amber-300 flex items-center gap-1.5">
-                        <span class="inline-block w-2 h-2 rounded-full bg-amber-400"></span>
-                        <span>مكافأة الحضور اليومي (يوم <span id="daily-day-num">1</span>/7)</span>
-                    </div>
-                    <div class="text-[11px] text-slate-400">مكافأة متصاعدة تُضاف لرصيدك الملكي يومياً</div>
-                </div>
-                <button type="button" id="claim-daily-btn" data-action="daily" class="btn-gold-luxury px-3.5 py-2.5 rounded-xl text-xs shrink-0 cursor-pointer">استلم 150</button>
-            </div>
-
-            <!-- تحدي صديق مباشر -->
-            <div class="luxury-panel-cyan p-4 space-y-3">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <span class="w-7 h-7 rounded-lg bg-cyan-400/15 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-black text-xs">1v1</span>
-                        <span class="text-xs font-black text-cyan-200">تحدي صديق مباشر</span>
-                    </div>
-                    <span class="text-[10px] bg-emerald-500/15 text-emerald-300 border border-emerald-400/25 px-2 py-0.5 rounded-full font-bold">مزامنة فورية</span>
-                </div>
-
-                <div class="flex gap-1.5">
-                    <input id="pvp-target-id" type="text" placeholder="معرف الصديق (اختياري) RG-..." class="flex-1 min-w-0 bg-slate-950/90 border border-white/10 focus:border-cyan-400/60 outline-none rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500" />
-                    <select id="pvp-game-select" class="bg-slate-950/90 border border-white/10 rounded-xl px-2.5 py-2 text-xs text-amber-300 font-bold outline-none">
-                        <option value="chess">شطرنج</option>
-                        <option value="connect4">4 تربح</option>
-                        <option value="xo">XO</option>
-                    </select>
-                    <button type="button" data-action="pvp-create" class="bg-gradient-to-r from-cyan-400 to-sky-500 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs shrink-0 cursor-pointer shadow-lg shadow-cyan-500/20">تحدي</button>
-                </div>
-
-                <div class="flex gap-1.5 pt-2 border-t border-white/10">
-                    <input id="pvp-join-code" type="text" maxlength="5" placeholder="رقم الغرفة (5 أرقام)..." class="flex-1 min-w-0 bg-slate-950/90 border border-white/10 focus:border-emerald-400/60 outline-none rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500" />
-                    <select id="pvp-join-game" class="bg-slate-950/90 border border-white/10 rounded-xl px-2.5 py-1.5 text-xs text-slate-300 font-bold outline-none">
-                        <option value="chess">شطرنج</option>
-                        <option value="connect4">4 تربح</option>
-                        <option value="xo">XO</option>
-                    </select>
-                    <button type="button" data-action="pvp-join" class="bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs shrink-0 cursor-pointer">دخول</button>
+                <div class="flex items-center gap-4 text-[11px]">
+                    <!-- Direct Telegram Support Button Top -->
+                    <a :href="telegramSupportUrl" target="_blank" class="text-sky-400 hover:text-sky-300 font-bold flex items-center gap-1 transition bg-sky-500/10 px-2.5 py-1 rounded-lg border border-sky-500/30">
+                        <i class="fa-brands fa-telegram"></i>
+                        <span>الدعم الفني المباشر @V_B_IT</span>
+                    </a>
+                    <!-- Admin Login Toggle Button -->
+                    <button @click="openAdminModal" class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 transition">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <span>{{ isAdminLoggedIn ? t('adminPanelTitle') : t('adminLoginBtn') }}</span>
+                    </button>
+                    <!-- Language Selector -->
+                    <button @click="toggleLanguage" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1 rounded-lg border border-slate-700 transition flex items-center gap-1">
+                        <i class="fa-solid fa-globe text-purple-400"></i>
+                        <span>{{ currentLang === 'ar' ? 'Türkçe 🇹🇷' : 'العربية 🇸🇦' }}</span>
+                    </button>
                 </div>
             </div>
+        </div>
 
-            <!-- غرفة كبار الشخصيات VIP8 -->
-            <div class="luxury-panel-vip p-4 space-y-2.5">
-                <div class="flex items-start justify-between gap-2">
+        <!-- MAIN HEADER / NAVBAR -->
+        <header class="sticky top-0 z-40 glass-panel border-b border-slate-800/80">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+                
+                <!-- LOGO -->
+                <div @click="currentView = 'shop'" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-purple-500/30 group-hover:scale-105 transition duration-300">
+                        <i class="fa-solid fa-shield-halved text-xl"></i>
+                    </div>
                     <div>
-                        <div class="text-xs font-black text-amber-300">غرفة كبار الشخصيات • 8 جولات</div>
-                        <div class="text-[10px] text-slate-300/90 mt-0.5">الحد الأدنى 1,000 عملة • مضاعفة الرهان مع كل انتصار</div>
-                    </div>
-                    <span class="text-[10px] bg-amber-400/15 border border-amber-400/35 text-amber-200 px-2.5 py-0.5 rounded-full font-black shrink-0">VIP 8</span>
-                </div>
-                <div class="flex gap-2">
-                    <input id="vip-bet-input" type="number" min="1000" step="500" value="1000" class="flex-1 min-w-0 bg-slate-950/90 border border-amber-400/30 rounded-xl px-3 py-2 text-xs text-amber-300 font-black outline-none" />
-                    <button type="button" data-action="vip8" class="btn-gold-luxury px-4 py-2 rounded-xl text-xs shrink-0 cursor-pointer">دخول الغرفة</button>
-                </div>
-            </div>
-
-            <!-- شبكة الألعاب الـ 16 -->
-            <div class="space-y-2.5">
-                <div class="flex items-center justify-between px-0.5">
-                    <h2 class="text-sm font-black text-white">مكتبة الألعاب الملكية <span class="text-amber-400">(16)</span></h2>
-                    <span class="text-[10px] text-slate-400 font-semibold">انقر على أي لعبة للبدء</span>
-                </div>
-                <div id="games-grid" class="grid grid-cols-2 gap-2.5"></div>
-            </div>
-        </section>
-
-        <!-- ساحة اللعب -->
-        <section id="tab-arena" class="hidden space-y-3">
-            <div class="luxury-panel p-2.5 flex items-center justify-between gap-2">
-                <button type="button" data-action="exit-arena" class="bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-white px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer">← رجوع</button>
-                <div class="text-center min-w-0">
-                    <div id="arena-game-title" class="text-xs font-black text-amber-300 truncate">الشطرنج الملكي</div>
-                    <div id="arena-sub-info" class="text-[10px] text-slate-400 truncate">الجولة 1 • ضد الذكاء الاصطناعي</div>
-                </div>
-                <button type="button" data-action="howto" class="bg-slate-800/90 border border-amber-400/25 text-amber-300 w-8 h-8 rounded-xl text-xs font-black cursor-pointer">؟</button>
-            </div>
-
-            <div id="pvp-status-bar" class="hidden luxury-panel-cyan p-2.5 text-center space-y-1">
-                <div class="flex items-center justify-center gap-2 text-xs font-black text-cyan-300">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                    <span id="pvp-room-label">غرفة مباشرة #00000</span>
-                    <button type="button" data-action="copy-room" class="bg-cyan-400/20 text-cyan-200 px-2 py-0.5 rounded-md text-[10px] cursor-pointer">نسخ</button>
-                </div>
-                <div id="pvp-connection-text" class="text-[11px] text-slate-300">بانتظار دخول صديقك...</div>
-            </div>
-
-            <div id="vip8-status-bar" class="hidden luxury-panel-vip p-2.5 flex items-center justify-between text-xs">
-                <span class="font-black text-amber-300">جولة <span id="vip8-round-txt">1</span> / 8</span>
-                <span class="font-black text-emerald-400">رصيد الغرفة: <span id="vip8-pot-txt">1,000</span></span>
-            </div>
-
-            <div class="luxury-panel p-3 flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2.5 min-w-0">
-                    <div id="opp-avatar" class="w-9 h-9 rounded-xl bg-slate-800/90 border border-white/10 flex items-center justify-center text-xs font-black text-cyan-300 shrink-0">AI</div>
-                    <div class="min-w-0">
-                        <div id="opp-name" class="text-xs font-black text-white truncate">الخصم الذكي</div>
-                        <div id="opp-status" class="text-[10px] text-slate-400">جاهز للمواجهة</div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl font-black tracking-wider text-white">GAMERS<span class="text-purple-400">ESCROW</span></span>
+                            <span class="bg-purple-500/20 text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded border border-purple-500/30">v4.0 PRO</span>
+                        </div>
+                        <p class="text-[10px] text-slate-400 font-medium">{{ t('tagline') }}</p>
                     </div>
                 </div>
-                <div id="turn-badge" class="bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 px-3 py-1 rounded-full text-[11px] font-black turn-pill-active shrink-0">
-                    دورك الآن
+
+                <!-- NAVIGATION BUTTONS -->
+                <nav class="hidden md:flex items-center gap-1 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800">
+                    <button @click="currentView = 'shop'" :class="currentView === 'shop' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-store"></i>
+                        <span>{{ t('navMarketplace') }}</span>
+                    </button>
+                    <button @click="checkAuthAndOpenSell" :class="currentView === 'sell' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-circle-plus text-emerald-400"></i>
+                        <span>{{ t('navSellAccount') }}</span>
+                    </button>
+                    <button @click="currentView = 'orders'" :class="currentView === 'orders' ? 'bg-purple-600 text-white shadow-md' : 'text-slate-400 hover:text-white hover:bg-slate-800/50'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 relative">
+                        <i class="fa-solid fa-receipt"></i>
+                        <span>{{ t('navMyOrders') }}</span>
+                        <span v-if="orders.length" class="bg-emerald-500 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">{{ orders.length }}</span>
+                    </button>
+                </nav>
+
+                <!-- USER AUTH / PROFILE AREA -->
+                <div class="flex items-center gap-3">
+                    <div v-if="currentUser" class="flex items-center gap-3 bg-slate-900/80 border border-slate-800 p-1.5 px-3 rounded-2xl">
+                        <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30 flex items-center justify-center font-bold text-xs">
+                            {{ currentUser.name.charAt(0) }}
+                        </div>
+                        <div class="hidden sm:block text-right">
+                            <span class="block text-xs font-bold text-slate-200 flex items-center gap-1">
+                                {{ currentUser.name }}
+                                <i class="fa-solid fa-circle-check text-emerald-400 text-[11px]" title="موثق الهوية"></i>
+                            </span>
+                            <span class="block text-[10px] text-slate-400 font-mono">{{ currentUser.email || currentUser.phone }}</span>
+                        </div>
+                        <button @click="logoutUser" class="text-slate-500 hover:text-rose-400 text-xs p-1 transition" title="تسجيل الخروج">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </button>
+                    </div>
+
+                    <button v-else @click="showAuthModal = true" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-purple-600/20 transition flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>{{ t('authButton') }}</span>
+                    </button>
                 </div>
             </div>
+        </header>
 
-            <div id="arena-board-container" class="luxury-panel p-3.5 flex flex-col items-center justify-center min-h-[340px]"></div>
+        <!-- MAIN CONTAINER -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
 
-            <div class="flex gap-2">
-                <button type="button" data-action="restart-round" class="flex-1 bg-slate-800/90 hover:bg-slate-700 border border-white/10 text-white py-2.5 rounded-xl text-xs font-bold cursor-pointer">إعادة الجولة</button>
-                <button type="button" data-action="surrender" class="flex-1 bg-rose-950/80 hover:bg-rose-900/80 border border-rose-500/35 text-rose-200 py-2.5 rounded-xl text-xs font-bold cursor-pointer">انسحاب</button>
-            </div>
-        </section>
-
-        <!-- تبويب المتجر -->
-        <section id="tab-shop" class="hidden space-y-4">
-            <div class="luxury-panel-vip p-4 flex items-center justify-between gap-3">
-                <div>
-                    <div class="text-sm font-black text-amber-300">العضوية الملكية VIP</div>
-                    <div class="text-[11px] text-slate-300/90">+50% مكافآت إضافية • شارة ملكية • فتح كافة الأفتارات</div>
-                </div>
-                <button type="button" id="buy-vip-btn" data-action="buy-vip" class="btn-gold-luxury px-3.5 py-2 rounded-xl text-xs shrink-0 cursor-pointer">2,500</button>
-            </div>
-
-            <div class="space-y-2">
-                <h3 class="text-sm font-black text-white px-0.5">متجر الأفتارات والندرات</h3>
-                <div id="shop-avatars-grid" class="grid grid-cols-2 gap-2.5"></div>
+            <!-- MOBILE NAV BAR -->
+            <div class="md:hidden flex items-center justify-around bg-slate-900 border border-slate-800 p-2 rounded-2xl mb-6 text-xs font-bold">
+                <button @click="currentView = 'shop'" :class="currentView === 'shop' ? 'text-purple-400 font-black' : 'text-slate-400'" class="flex flex-col items-center gap-1">
+                    <i class="fa-solid fa-store text-base"></i>
+                    <span>{{ t('navMarketplace') }}</span>
+                </button>
+                <button @click="checkAuthAndOpenSell" :class="currentView === 'sell' ? 'text-purple-400 font-black' : 'text-slate-400'" class="flex flex-col items-center gap-1">
+                    <i class="fa-solid fa-circle-plus text-base text-emerald-400"></i>
+                    <span>{{ t('navSellAccount') }}</span>
+                </button>
+                <button @click="currentView = 'orders'" :class="currentView === 'orders' ? 'text-purple-400 font-black' : 'text-slate-400'" class="flex flex-col items-center gap-1">
+                    <i class="fa-solid fa-receipt text-base"></i>
+                    <span>{{ t('navMyOrders') }}</span>
+                </button>
             </div>
 
-            <div class="space-y-2">
-                <h3 class="text-sm font-black text-white px-0.5">مظاهر رقعة الشطرنج</h3>
-                <div id="shop-themes-grid" class="grid grid-cols-2 gap-2.5"></div>
-            </div>
-        </section>
+            <!-- VIEW 1: SHOP / MARKETPLACE -->
+            <div v-if="currentView === 'shop'" class="space-y-6">
+                
+                <!-- HERO BANNER -->
+                <div class="relative overflow-hidden rounded-3xl glass-panel p-6 sm:p-10 border border-purple-500/20 bg-gradient-to-r from-purple-950/40 via-slate-900 to-indigo-950/40">
+                    <div class="relative z-10 max-w-2xl space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-bold">
+                            <i class="fa-solid fa-shield-check text-emerald-400"></i>
+                            <span>{{ t('heroBadge') }}</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-4xl font-black text-white leading-tight">
+                            {{ t('heroTitle1') }} <span class="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">{{ t('heroTitle2') }}</span>
+                        </h1>
+                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                            {{ t('heroDesc') }}
+                        </p>
 
-        <!-- تبويب المهام -->
-        <section id="tab-challenges" class="hidden space-y-3">
-            <h2 class="text-sm font-black text-white px-0.5">المهام اليومية والمكافآت</h2>
-            <div id="challenges-list" class="space-y-2.5"></div>
-        </section>
-
-        <!-- تبويب الملف الشخصي -->
-        <section id="tab-profile" class="hidden space-y-4">
-            <div class="luxury-panel p-4 text-center space-y-3">
-                <div class="relative w-20 h-20 mx-auto">
-                    <div class="w-full h-full rounded-full p-[2.5px] bg-gradient-to-tr from-amber-500 via-yellow-200 to-amber-600 shadow-xl">
-                        <div class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center text-4xl overflow-hidden">
-                            <span id="profile-avatar-emoji">👑</span>
-                            <img id="profile-avatar-img" class="w-full h-full object-cover hidden" alt="profile" onerror="this.classList.add('hidden'); document.getElementById('profile-avatar-emoji').classList.remove('hidden');" />
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <a :href="telegramSupportUrl" target="_blank" class="bg-sky-500 hover:bg-sky-400 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition flex items-center gap-2 shadow-lg shadow-sky-500/20">
+                                <i class="fa-brands fa-telegram text-base"></i>
+                                <span>تواصل مع الدعم الفني المباشر (@V_B_IT)</span>
+                            </a>
                         </div>
                     </div>
-                    <label class="absolute bottom-0 right-0 btn-gold-luxury w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-black cursor-pointer shadow-md">
-                        +
-                        <input type="file" accept="image/*" class="hidden" onchange="uploadCustomAvatar(event)" />
-                    </label>
                 </div>
 
-                <div class="flex items-center justify-center gap-1.5">
-                    <input id="profile-name-input" type="text" maxlength="18" class="bg-slate-950/90 border border-white/15 rounded-xl px-3 py-1.5 text-center text-sm font-black text-white w-44 outline-none focus:border-amber-400" />
-                    <button type="button" data-action="save-name" class="btn-gold-luxury px-3 py-1.5 rounded-xl text-xs cursor-pointer">حفظ</button>
+                <!-- CATEGORY / GAME FILTERS -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                    <button @click="selectedGame = 'all'" :class="selectedGame === 'all' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">
+                        🎮 {{ t('allGames') }}
+                    </button>
+                    <button @click="selectedGame = 'pubg'" :class="selectedGame === 'pubg' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-crosshairs text-amber-400"></i> ببجي PUBG Mobile
+                    </button>
+                    <button @click="selectedGame = 'valorant'" :class="selectedGame === 'valorant' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-gun text-rose-400"></i> فالورانت Valorant
+                    </button>
+                    <button @click="selectedGame = 'fortnite'" :class="selectedGame === 'fortnite' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-bolt text-sky-400"></i> فورتنايت Fortnite
+                    </button>
+                    <button @click="selectedGame = 'coc'" :class="selectedGame === 'coc' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-shield-halved text-amber-500"></i> كلاش أوف كلانس
+                    </button>
+                    <button @click="selectedGame = 'clash_royale'" :class="selectedGame === 'clash_royale' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-crown text-amber-300"></i> كلاش رويال
+                    </button>
+                    <button @click="selectedGame = 'hayday'" :class="selectedGame === 'hayday' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-wheat-awn text-emerald-400"></i> هاياي / المزرعة
+                    </button>
+                    <button @click="selectedGame = 'roblox'" :class="selectedGame === 'roblox' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fa-solid fa-cube text-red-400"></i> روبلوكس Roblox
+                    </button>
+                    <button @click="selectedGame = 'other'" :class="selectedGame === 'other' ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'" class="px-4 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap">
+                        🎲 ألعاب متفرقة / Steam
+                    </button>
                 </div>
 
-                <div class="bg-slate-950/80 border border-cyan-400/25 rounded-xl px-3 py-2 flex items-center justify-between text-xs">
-                    <span class="text-slate-400">معرف التحدي الخاص (ID):</span>
-                    <div class="flex items-center gap-1.5">
-                        <span id="profile-player-id" class="font-black text-cyan-300">RG-0000</span>
-                        <button type="button" data-action="copy-id" class="bg-cyan-400/20 text-cyan-200 px-2 py-0.5 rounded-md text-[10px] cursor-pointer">نسخ</button>
+                <!-- ACCOUNTS GRID -->
+                <div v-if="filteredAccounts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div v-for="acc in filteredAccounts" :key="acc.id" class="glass-panel rounded-3xl overflow-hidden border border-slate-800 hover:border-purple-500/50 transition duration-300 flex flex-col justify-between group">
+                        
+                        <div>
+                            <!-- Account Image Banner -->
+                            <div class="relative h-56 overflow-hidden bg-slate-900">
+                                <img :src="acc.images[acc.activeImageIndex || 0]" :alt="acc.title" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                
+                                <!-- Limited Time Discount Badge -->
+                                <div v-if="acc.discountDays && acc.originalPrice" class="absolute top-3 left-3 bg-rose-600 text-white text-[11px] px-2.5 py-1 rounded-lg font-black flex items-center gap-1 shadow-lg backdrop-blur-md animate-bounce">
+                                    <i class="fa-solid fa-fire text-amber-300"></i> خصم لمدة {{ acc.discountDays }} يوم!
+                                </div>
+
+                                <!-- Game Badge -->
+                                <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md border border-slate-700 text-purple-300 text-[10px] font-bold px-2.5 py-1 rounded-lg">
+                                    {{ getGameLabel(acc.game) }}
+                                </div>
+
+                                <!-- Image Navigation Bullets -->
+                                <div v-if="acc.images.length > 1" class="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-slate-950/60 backdrop-blur-md px-2 py-1 rounded-full">
+                                    <span v-for="(img, idx) in acc.images" :key="idx" @click.stop="acc.activeImageIndex = idx" :class="(acc.activeImageIndex || 0) === idx ? 'bg-purple-400 w-3' : 'bg-slate-500 w-1.5'" class="h-1.5 rounded-full cursor-pointer transition-all"></span>
+                                </div>
+
+                                <!-- Video Link Button -->
+                                <a v-if="acc.videoUrl" :href="acc.videoUrl" target="_blank" class="absolute bottom-3 right-3 bg-red-600/90 hover:bg-red-600 text-white text-[11px] px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5 shadow-lg backdrop-blur-md transition">
+                                    <i class="fa-solid fa-play text-xs"></i> {{ t('watchVideo') }}
+                                </a>
+                            </div>
+
+                            <!-- Content Info -->
+                            <div class="p-5 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                                        <i class="fa-solid fa-user-check text-[10px]"></i>
+                                        {{ t('seller') }}: {{ acc.sellerName }}
+                                    </span>
+                                    <span class="text-[10px] text-slate-500 font-mono">ID: #{{ acc.id }}</span>
+                                </div>
+
+                                <h3 class="text-base font-bold text-white line-clamp-1 group-hover:text-purple-300 transition">{{ acc.title }}</h3>
+                                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">{{ acc.description }}</p>
+
+                                <!-- Specs Tags -->
+                                <div class="flex flex-wrap gap-1.5 pt-1">
+                                    <span v-for="spec in acc.specs" :key="spec" class="bg-slate-900 border border-slate-800 text-slate-300 text-[10px] px-2 py-1 rounded-md">
+                                        ⚡ {{ spec }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price and Buy Action -->
+                        <div class="p-5 pt-0 flex items-center justify-between border-t border-slate-800/60 mt-2">
+                            <div>
+                                <span class="text-[10px] text-slate-400 block">{{ t('priceLabel') }}</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-emerald-400 font-black text-lg">₺{{ acc.price ? acc.price.toLocaleString('tr-TR') : 0 }}</span>
+                                    <span v-if="acc.originalPrice" class="text-xs text-slate-500 line-through">₺{{ acc.originalPrice.toLocaleString('tr-TR') }}</span>
+                                </div>
+                            </div>
+                            <button @click="startAccountPurchase(acc)" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>{{ t('buyBtn') }}</span>
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="space-y-1.5 text-right">
-                    <div class="flex justify-between text-[11px] font-bold">
-                        <span id="profile-rank-label" class="text-amber-300">مبتدئ</span>
-                        <span class="text-slate-400">XP: <span id="profile-xp-txt" class="text-white">0</span></span>
+                <!-- EMPTY STATE -->
+                <div v-else class="text-center py-16 glass-panel rounded-3xl border border-slate-800 space-y-3">
+                    <i class="fa-solid fa-ghost text-4xl text-slate-600"></i>
+                    <h3 class="text-base font-bold text-slate-300">{{ t('noAccountsTitle') }}</h3>
+                    <p class="text-xs text-slate-500">{{ t('noAccountsSub') }}</p>
+                    <button @click="checkAuthAndOpenSell" class="mt-2 bg-purple-600 text-white text-xs font-bold px-4 py-2 rounded-xl">
+                        {{ t('navSellAccount') }}
+                    </button>
+                </div>
+            </div>
+
+            <!-- VIEW 2: SELL ACCOUNT FORM -->
+            <div v-if="currentView === 'sell'" class="max-w-2xl mx-auto space-y-6">
+                <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-purple-500/30 space-y-6">
+                    <div>
+                        <h2 class="text-2xl font-black text-white flex items-center gap-2">
+                            <i class="fa-solid fa-plus-circle text-purple-400"></i>
+                            {{ t('sellTitle') }}
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">{{ t('sellSub') }}</p>
                     </div>
-                    <div class="w-full h-2.5 bg-slate-800/90 rounded-full overflow-hidden p-[1px]">
-                        <div id="profile-xp-bar" class="h-full bg-gradient-to-r from-amber-500 via-yellow-300 to-amber-400 rounded-full transition-all duration-300" style="width: 8%"></div>
+
+                    <form @submit.prevent="submitNewAccount" class="space-y-4 text-xs">
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">{{ t('accTitleLabel') }} *</label>
+                            <input v-model="newAccount.title" type="text" placeholder="مثال: حساب كلاش تاون هول 15 ماكس / ببجي ميثك" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-bold text-slate-300 mb-1">{{ t('gameLabel') }} *</label>
+                                <select v-model="newAccount.game" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500">
+                                    <option value="pubg">ببجي PUBG Mobile</option>
+                                    <option value="coc">كلاش أوف كلانس Clash of Clans</option>
+                                    <option value="clash_royale">كلاش رويال Clash Royale</option>
+                                    <option value="hayday">هاياي / المزرعة السعيدة Hay Day</option>
+                                    <option value="valorant">فالورانت Valorant</option>
+                                    <option value="fortnite">فورتنايت Fortnite</option>
+                                    <option value="roblox">روبلوكس Roblox</option>
+                                    <option value="other">ألعاب ومتنوعات / Steam / ألعاب أخرى</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block font-bold text-slate-300 mb-1">{{ t('priceTry') }} (₺) *</label>
+                                <input v-model.number="newAccount.price" type="number" min="1" placeholder="1500" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500">
+                            </div>
+                        </div>
+
+                        <!-- Timed Discount System -->
+                        <div class="p-4 bg-slate-900/90 rounded-2xl border border-rose-500/30 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <label class="font-bold text-rose-300 flex items-center gap-1.5 cursor-pointer">
+                                    <input type="checkbox" v-model="newAccount.hasDiscount" class="accent-rose-500 w-4 h-4 rounded">
+                                    <i class="fa-solid fa-tag text-amber-400"></i> تفعيل عروض وعرض خصم مؤقت لسرعة البيع 🔥
+                                </label>
+                            </div>
+
+                            <div v-if="newAccount.hasDiscount" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                        <!-- Media Links & File Uploads -->
+                        <div class="space-y-3 bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                            <div>
+                                <label class="block font-bold text-slate-300 mb-1">رفع صور الحساب (من المعرض/الجهاز) *</label>
+                                <input type="file" @change="handleAccountImagesUpload" multiple accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-300 text-xs focus:outline-none focus:border-purple-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
+                                <p class="text-[10px] text-slate-500 mt-1">يمكنك تحديد أكثر من صورة معاً من الاستديو.</p>
+                            </div>
+
+                            <!-- Preview Uploaded Images -->
+                            <div v-if="newAccount.uploadedImages.length > 0" class="flex items-center gap-2 overflow-x-auto py-2">
+                                <div v-for="(img, idx) in newAccount.uploadedImages" :key="idx" class="relative w-16 h-16 rounded-lg overflow-hidden border border-purple-500/40 flex-shrink-0">
+                                    <img :src="img" class="w-full h-full object-cover">
+                                    <button @click.prevent="newAccount.uploadedImages.splice(idx, 1)" class="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full w-4 h-4 text-[9px] flex items-center justify-center">✕</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-300 mb-1">رفع فيديو استعراض الحساب من المعرض (اختياري)</label>
+                                <input type="file" @change="handleAccountVideoUpload" accept="video/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-300 text-xs focus:outline-none focus:border-purple-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                            </div>
+
+                            <div v-if="newAccount.uploadedVideo" class="p-2 bg-indigo-950/50 rounded-xl border border-indigo-500/30 flex items-center justify-between">
+                                <span class="text-[11px] text-indigo-300 flex items-center gap-1.5"><i class="fa-solid fa-video"></i> تم رفع فيديو الاستعراض من الجهاز</span>
+                                <button @click.prevent="newAccount.uploadedVideo = null" class="text-rose-400 text-xs hover:underline">إزالة</button>
+                            </div>
+                        </div>
+
+                        <!-- Specs & Description -->
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">المميزات السريعة (مفصولة بفواصل) *</label>
+                            <input v-model="newAccount.specsInput" type="text" placeholder="مثال: امفور جوكر ماكس, المستوى 72, لبسة ميثك" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500">
+                        </div>
+
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">وصف تفصيلي للحساب *</label>
+                            <textarea v-model="newAccount.description" rows="3" placeholder="اكتب تفاصيل الحساب الكاملة للراغبين بالشراء..." required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500"></textarea>
+                        </div>
+
+                        <!-- Secret Escrow Credentials Section -->
+                        <div class="p-4 bg-purple-950/40 rounded-2xl border border-purple-500/30 space-y-3">
+                            <h4 class="font-bold text-purple-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-lock text-amber-400"></i>
+                                بيانات تسجيل الدخول السرية (محفوظة بشرط عدم الظهور إلا بعد الدفع)
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">اسم المستخدم / الإيميل</label>
+                                    <input v-model="newAccount.secretUser" type="text" required placeholder="user@gmail.com" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">كلمة السر</label>
+                                    <input v-model="newAccount.secretPass" type="text" required placeholder="********" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">ملاحظات تسليم الملكية (طريقة فك الارتباط)</label>
+                                <input v-model="newAccount.secretNotes" type="text" placeholder="مثال: الحساب مرتبط بفيسبوك فقط وسيتم إعطاؤك الإيميل الأساسي" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-white">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-purple-600/30 transition text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>نشر الحساب بالسوق وفحص الضامن</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW 3: ORDERS / DISPUTE MANAGEMENT -->
+            <div v-if="currentView === 'orders'" class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-receipt text-emerald-400"></i>
+                        {{ t('ordersTitle') }}
+                    </h2>
+                </div>
+
+                <div v-if="orders.length > 0" class="space-y-4">
+                    <div v-for="order in orders" :key="order.id" class="glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-800">
+                            <div>
+                                <span class="text-xs text-slate-400 block">رقم طلب النزاع / الصفقة</span>
+                                <span class="text-sm font-mono font-bold text-purple-300">#ORD-{{ order.id }}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span :class="getOrderStatusBadgeClass(order.status)" class="px-3 py-1 rounded-full text-xs font-bold">
+                                    {{ getOrderStatusLabel(order.status) }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <h4 class="text-base font-bold text-white">{{ order.accountTitle }}</h4>
+                                <p class="text-xs text-slate-400 mt-1">السعر المدفوع بالحفظ: <span class="text-emerald-400 font-bold">₺{{ order.price.toLocaleString('tr-TR') }}</span></p>
+                                <p class="text-xs text-slate-400">البائع: <span class="text-purple-300 font-bold">{{ order.sellerName }} ({{ order.sellerPhone }})</span></p>
+                            </div>
+
+                            <!-- Secret Credentials Displayed Only to Buyer -->
+                            <div class="bg-slate-900 p-4 rounded-2xl border border-purple-500/30 space-y-2">
+                                <h5 class="text-xs font-bold text-purple-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-key"></i>
+                                    بيانات الدخول المسلمة من الضامن:
+                                </h5>
+                                <div class="text-xs font-mono space-y-1 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                                    <div><span class="text-slate-500">اليوزر / الإيميل:</span> <span class="text-amber-300 font-bold select-all">{{ order.secretUser }}</span></div>
+                                    <div><span class="text-slate-500">كلمة السر:</span> <span class="text-amber-300 font-bold select-all">{{ order.secretPass }}</span></div>
+                                    <div v-if="order.secretNotes"><span class="text-slate-500">ملاحظة:</span> <span class="text-slate-300">{{ order.secretNotes }}</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions & Dispute Buttons -->
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800">
+                            <!-- Security Code Info -->
+                            <div class="text-xs text-slate-400 flex items-center gap-2">
+                                <span>كود تأكيد الاستلام الخاص بك:</span>
+                                <span class="bg-purple-950 text-purple-300 font-mono font-black px-2.5 py-1 rounded-lg border border-purple-500/30 text-sm tracking-widest">{{ order.deliveryCode }}</span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <!-- Confirm Receipt Button -->
+                                <button v-if="order.status === 'PAID_ESCROW'" @click="confirmOrderReceipt(order)" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    <span>تأكيد استلام الحساب وتفريغ المبلغ للبائع</span>
+                                </button>
+
+                                <!-- Direct Support Trigger -->
+                                <a :href="telegramSupportUrl" target="_blank" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg transition flex items-center gap-1.5">
+                                    <i class="fa-brands fa-telegram"></i>
+                                    <span>تواصل مع الدعم الفني</span>
+                                </a>
+
+                                <!-- Report / Dispute Button -->
+                                <button v-if="order.status === 'PAID_ESCROW'" @click="triggerDispute(order)" class="bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <span>إبلاغ عن نصب / فتح نزاع</span>
+                                </button>
+                            </div>
+        <!-- USER KYC AUTHENTICATION & DIRECT ACCOUNT REGISTRATION MODAL -->
+        <div v-if="showAuthModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+            <div class="glass-panel w-full max-w-md p-6 sm:p-8 rounded-3xl border border-purple-500/30 space-y-5 max-h-[90vh] overflow-y-auto">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield text-purple-400"></i>
+                        إنشاء حساب جديد وتأكيد الهوية (KYC)
+                    </h3>
+                    <button @click="showAuthModal = false" class="text-slate-400 hover:text-white text-xl">×</button>
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed">أدخل معلوماتك الشخصية والبريد الإلكتروني للعمل على المنصة بشكل مباشر دون أية روابط خارجية.</p>
+
+                <!-- Error Alert Display -->
+                <div v-if="authError" class="p-3 bg-rose-500/20 border border-rose-500/40 rounded-xl text-rose-300 text-xs font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-circle-exclamation text-rose-400"></i>
+                    <span>{{ authError }}</span>
+                </div>
+
+                <form @submit.prevent="saveUserAccount" class="space-y-4 text-xs">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">الاسم الكامل (مطابق للهوية بالضبط) *</label>
+                        <input v-model="authForm.name" type="text" required placeholder="مثال: عمر علي" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">البريد الإلكتروني *</label>
+                            <input v-model="authForm.email" type="email" required placeholder="user@gmail.com" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-slate-300 mb-1">كلمة سر الحساب *</label>
+                            <input v-model="authForm.password" type="password" required placeholder="••••••••" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-white font-mono focus:outline-none focus:border-purple-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">رقم الهاتف الصحيح *</label>
+                        <input v-model="authForm.phone" type="tel" required placeholder="+90 5XX XXX XX XX" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 font-mono">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">اسم مستخدم تلغرام Telegram (اختياري)</label>
+                        <input v-model="authForm.telegram" type="text" placeholder="@V_B_IT" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500 font-mono">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">صورة الهوية الشخصية (اختر من المعرض/الجهاز) *</label>
+                        <input type="file" @change="handleIdUpload" accept="image/*" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-slate-300 text-xs focus:outline-none focus:border-purple-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer">
+                        <p class="text-[10px] text-slate-500 mt-1">تظهر الهوية للإدارة فقط بغرض التوثيق والضمان.</p>
+                    </div>
+
+                    <!-- ID Card Preview -->
+                    <div v-if="authForm.idCardUrl" class="relative rounded-xl overflow-hidden border border-purple-500/30 bg-slate-900 h-32 flex items-center justify-center">
+                        <img :src="authForm.idCardUrl" class="w-full h-full object-cover">
+                        <div class="absolute bottom-2 right-2 bg-emerald-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                            <i class="fa-solid fa-check"></i> جاهز للتوثيق
+                        </div>
+                    </div>
+
+                    <button type="submit" :disabled="isVerifying" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3 rounded-xl transition flex items-center justify-center gap-2">
+                        <i v-if="isVerifying" class="fa-solid fa-spinner fa-spin"></i>
+                        <span>{{ isVerifying ? 'جاري إنشاء الحساب وتدقيق الهوية...' : 'إنشاء الحساب وتأكيد التوثيق' }}</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CHECKOUT & ESCROW PAYMENT MODAL -->
+        <div v-if="showCheckoutModal && selectedAccountForPurchase" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+            <div class="glass-panel w-full max-w-lg p-6 sm:p-8 rounded-3xl border border-emerald-500/30 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <h3 class="text-lg font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-shield-check text-emerald-400"></i>
+                        {{ t('checkoutTitle') }}
+                    </h3>
+                    <button @click="showCheckoutModal = false" class="text-slate-400 hover:text-white text-xl">×</button>
+                </div>
+
+                <!-- Product Summary -->
+                <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-800 space-y-2">
+                    <span class="text-[10px] text-slate-400 block">تفاصيل الحساب المراد شاؤه</span>
+                    <h4 class="text-sm font-bold text-white">{{ selectedAccountForPurchase.title }}</h4>
+                    <div class="flex items-center justify-between pt-1">
+                        <span class="text-xs text-slate-400">المبلغ الإجمالي المحفوظ بالضامن:</span>
+                        <span class="text-emerald-400 font-black text-base">₺{{ selectedAccountForPurchase.price ? selectedAccountForPurchase.price.toLocaleString('tr-TR') : 0 }}</span>
                     </div>
                 </div>
-            </div>
 
-            <div class="grid grid-cols-3 gap-2 text-center">
-                <div class="luxury-panel p-3">
-                    <div id="stat-wins" class="text-lg font-black text-emerald-400">0</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">إجمالي الفوز</div>
+                <!-- Payment Methods Form -->
+                <div class="space-y-4 text-xs">
+                    <div class="grid grid-cols-2 gap-3">
+                        <button @click="paymentMethod = 'card'" :class="paymentMethod === 'card' ? 'bg-purple-600 text-white border-purple-400' : 'bg-slate-900 text-slate-400 border-slate-800'" class="p-3 rounded-xl border font-bold text-center transition">
+                            💳 {{ t('creditCard') }}
+                        </button>
+                        <button @click="paymentMethod = 'papara'" :class="paymentMethod === 'papara' ? 'bg-purple-600 text-white border-purple-400' : 'bg-slate-900 text-slate-400 border-slate-800'" class="p-3 rounded-xl border font-bold text-center transition">
+                            👛 Papara / IBAN ₺
+                        </button>
+                    </div>
+
+                    <div v-if="paymentMethod === 'card'" class="space-y-3 bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+                        <div>
+                            <label class="block text-slate-400 mb-1">رقم البطاقة</label>
+                            <input type="text" placeholder="4532 •••• •••• 8892" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-slate-400 mb-1">تاريخ الانتهاء</label>
+                                <input type="text" placeholder="12/28" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 mb-1">رمز CVC</label>
+                                <input type="text" placeholder="***" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white font-mono">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else class="p-4 bg-purple-950/30 rounded-2xl border border-purple-500/20 text-xs space-y-2">
+                        <p class="text-purple-300 font-bold">معلومات الحساب المباشر Papara:</p>
+                        <p class="text-slate-300 font-mono">IBAN: TR14 0082 9000 0949 1446 2781 45</p>
+                        <p class="text-slate-300">الاسم: ömer ali</p>
+                    </div>
+
+                    <button @click="executeEscrowPayment" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-600/30 transition text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>تأكيد ودفع ₺{{ selectedAccountForPurchase.price ? selectedAccountForPurchase.price.toLocaleString('tr-TR') : 0 }} بالحفظ الآمن</span>
+                    </button>
                 </div>
-                <div class="luxury-panel p-3">
-                    <div id="stat-streak" class="text-lg font-black text-amber-300">0</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">أعلى سلسلة</div>
+            </div>
+        </div>
+
+        <!-- ADMIN PANEL MODAL (PROTECTED BY PIN 1234) -->
+        <div v-if="showAdminModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4">
+            <div class="glass-panel w-full max-w-3xl p-6 sm:p-8 rounded-3xl border border-amber-500/40 space-y-6">
+                
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <h3 class="text-lg font-black text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield"></i>
+                        {{ t('adminPanelTitle') }} (المالك: ömer ali)
+                    </h3>
+                    <button @click="showAdminModal = false" class="text-slate-400 hover:text-white text-xl">×</button>
                 </div>
-                <div class="luxury-panel p-3">
-                    <div id="stat-vip8" class="text-lg font-black text-purple-400">0</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">صدارة VIP8</div>
+
+                <!-- Admin PIN Verification View -->
+                <div v-if="!isAdminLoggedIn" class="space-y-4 text-center max-w-xs mx-auto py-6">
+                    <i class="fa-solid fa-lock text-3xl text-amber-400"></i>
+                    <h4 class="text-sm font-bold text-white">أدخل رمز أمان الإدارة السري</h4>
+                    <input v-model="adminPinInput" type="password" placeholder="PIN Code" class="w-full bg-slate-900 border border-slate-700 text-center font-mono text-lg rounded-xl py-2.5 text-white focus:outline-none focus:border-amber-400">
+                    <button @click="verifyAdminPin" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl transition text-xs">
+                        دخول اللوحة
+                    </button>
                 </div>
-            </div>
-        </section>
 
-    </main>
+                <!-- Authenticated Admin Control Panel -->
+                <div v-else class="space-y-6 text-xs">
+                    
+                    <!-- Papara Bank Details Reminder -->
+                    <div class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl space-y-1">
+                        <span class="text-amber-400 font-bold block">حساب استقبال العمولات الصافية (5%):</span>
+                        <div class="font-mono text-slate-200">ömer ali | TR14 0082 9000 0949 1446 2781 45</div>
+                    </div>
 
-    <!-- شريط التنقل السفلي -->
-    <nav class="fixed bottom-0 inset-x-0 z-40 bg-[#050811]/95 backdrop-blur-xl border-t border-white/10">
-        <div class="max-w-lg mx-auto grid grid-cols-4 py-1.5">
-            <button type="button" data-action="tab" data-val="games" class="nav-btn flex flex-col items-center py-1 text-amber-400 cursor-pointer" data-tab="games">
-                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="4"/><path d="M8 12h4m-2-2v4m5.5-1h.01M18 11h.01"/></svg>
-                <span class="text-[10px] font-extrabold">الألعاب</span>
-            </button>
-            <button type="button" data-action="tab" data-val="shop" class="nav-btn flex flex-col items-center py-1 text-slate-400 cursor-pointer" data-tab="shop">
-                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                <span class="text-[10px] font-extrabold">المتجر</span>
-            </button>
-            <button type="button" data-action="tab" data-val="challenges" class="nav-btn flex flex-col items-center py-1 text-slate-400 cursor-pointer" data-tab="challenges">
-                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/></svg>
-                <span class="text-[10px] font-extrabold">المهام</span>
-            </button>
-            <button type="button" data-action="tab" data-val="profile" class="nav-btn flex flex-col items-center py-1 text-slate-400 cursor-pointer" data-tab="profile">
-                <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="8" r="4"/></svg>
-                <span class="text-[10px] font-extrabold">ملفي</span>
-            </button>
-        </div>
-    </nav>
+                    <!-- All System Orders Management -->
+                    <div class="space-y-3">
+                        <h4 class="font-bold text-white text-sm">إدارة الصفقات المحجوزة والنزاعات:</h4>
+                        
+                        <div v-if="orders.length > 0" class="space-y-3">
+                            <div v-for="ord in orders" :key="ord.id" class="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-mono font-bold text-amber-400">#ORD-{{ ord.id }}</span>
+                                    <span :class="getOrderStatusBadgeClass(ord.status)" class="px-2 py-0.5 rounded text-[10px] font-bold">{{ ord.status }}</span>
+                                </div>
 
-    <!-- نافذة اختيار الصعوبة والرهان -->
-    <div id="lobby-modal" style="display:none" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="luxury-panel w-full max-w-sm p-5 space-y-4 border-amber-400/35">
-            <div class="text-center space-y-1">
-                <div id="lobby-icon" class="w-12 h-12 mx-auto rounded-2xl bg-amber-400/15 border border-amber-400/35 flex items-center justify-center text-base font-black text-amber-300">CH</div>
-                <h3 id="lobby-title" class="text-base font-black text-white">الشطرنج الملكي</h3>
-                <p id="lobby-desc" class="text-[11px] text-slate-400">اختر مستوى الخصم الذكي للبدء</p>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-                <button type="button" data-action="diff" data-val="easy" class="diff-btn bg-slate-900/90 border border-slate-700 p-2.5 rounded-xl text-xs font-extrabold text-emerald-400 cursor-pointer" data-diff="easy">مبتدئ (+50)</button>
-                <button type="button" data-action="diff" data-val="medium" class="diff-btn bg-slate-900/90 border border-amber-400 p-2.5 rounded-xl text-xs font-extrabold text-amber-300 cursor-pointer" data-diff="medium">متوسط (+100)</button>
-                <button type="button" data-action="diff" data-val="hard" class="diff-btn bg-slate-900/90 border border-slate-700 p-2.5 rounded-xl text-xs font-extrabold text-orange-400 cursor-pointer" data-diff="hard">صعب (+180)</button>
-                <button type="button" data-action="diff" data-val="master" class="diff-btn bg-slate-900/90 border border-slate-700 p-2.5 rounded-xl text-xs font-extrabold text-rose-400 cursor-pointer" data-diff="master">أستاذ (+300)</button>
-            </div>
-            <div class="flex gap-2">
-                <button type="button" data-action="launch" class="btn-gold-luxury flex-1 py-2.5 rounded-xl text-xs cursor-pointer">ابدأ اللعب</button>
-                <button type="button" data-action="bet" class="bg-gradient-to-r from-rose-600 to-red-500 text-white font-black px-3 py-2.5 rounded-xl text-xs cursor-pointer">رهان 100→300</button>
-            </div>
-            <button type="button" data-action="close-modal" data-val="lobby-modal" class="w-full text-xs text-slate-400 hover:text-white py-1 cursor-pointer">إلغاء</button>
-        </div>
-    </div>
-
-    <!-- نافذة النتيجة -->
-    <div id="result-modal" style="display:none" class="hidden fixed inset-0 z-[95] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="luxury-panel w-full max-w-sm p-5 text-center space-y-3 border-amber-400/45">
-            <div id="res-badge" class="inline-block px-3 py-1 rounded-full text-xs font-black bg-amber-400/15 text-amber-300 border border-amber-400/30">VICTORY</div>
-            <h3 id="res-title" class="text-xl font-black text-amber-300">انتصار ملكي</h3>
-            <p id="res-sub" class="text-xs text-slate-300">أداء متقن وتفوق واضح في الجولة</p>
-            <div id="res-reward-box" class="bg-slate-950/90 border border-amber-400/25 rounded-xl p-3 text-sm font-black text-emerald-400">+100 عملة • +60 XP</div>
-            <div class="flex gap-2 pt-1">
-                <button type="button" id="res-next-btn" data-action="next-round" class="btn-gold-luxury flex-1 py-2.5 rounded-xl text-xs cursor-pointer">الجولة التالية</button>
-                <button type="button" data-action="res-exit" class="bg-slate-800 text-white font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer">خروج</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة ترقية بيدق الشطرنج -->
-    <div id="promotion-modal" style="display:none" class="hidden fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-4">
-        <div class="luxury-panel p-4 text-center space-y-3 border-amber-400">
-            <div class="text-sm font-black text-amber-300">اختر قطعة الترقية</div>
-            <div class="grid grid-cols-4 gap-2 text-3xl">
-                <button type="button" data-action="promo" data-val="Q" class="bg-slate-800 hover:bg-amber-500/25 p-3 rounded-xl cursor-pointer">♕</button>
-                <button type="button" data-action="promo" data-val="R" class="bg-slate-800 hover:bg-amber-500/25 p-3 rounded-xl cursor-pointer">♖</button>
-                <button type="button" data-action="promo" data-val="B" class="bg-slate-800 hover:bg-amber-500/25 p-3 rounded-xl cursor-pointer">♗</button>
-                <button type="button" data-action="promo" data-val="N" class="bg-slate-800 hover:bg-amber-500/25 p-3 rounded-xl cursor-pointer">♘</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- نافذة القواعد -->
-    <div id="howto-modal" style="display:none" class="hidden fixed inset-0 z-[95] bg-black/80 flex items-center justify-center p-4">
-        <div class="luxury-panel w-full max-w-sm p-5 space-y-3">
-            <h3 id="howto-title" class="text-base font-black text-amber-300">قواعد اللعبة</h3>
-            <p id="howto-body" class="text-xs text-slate-300 leading-relaxed"></p>
-            <button type="button" data-action="close-modal" data-val="howto-modal" class="btn-gold-luxury w-full py-2 rounded-xl text-xs cursor-pointer">فهمت</button>
-        </div>
-    </div>
-
-<script>
-const DB_URL = 'https://royal-games-hub-default-rtdb.firebaseio.com';
-const STORAGE_KEY = 'royal_games_hub_luxury_v1';
-
-const GAMES_META = {
-    chess:     { name: 'الشطرنج الملكي', code: 'CH', tag: 'استراتيجية', desc: 'تبييت، ترقية، كش ملك وذكاء متدرج', rules: 'انقر على قطعتك لإظهار المربعات المتاحة باللون الأخضر ثم انقر على الهدف. احمِ ملكك وحاصر ملك الخصم.' },
-    ludo:      { name: 'اللودو الذهبي', code: 'LD', tag: 'نرد وتكتيك', desc: 'ارمِ النرد وتقدم نحو خط النهاية', rules: 'ارمِ النرد للتقدم نحو المركز. الرقم 6 يمنحك دفعة إضافية وتحدياً أسرع.' },
-    connect4:  { name: 'أربعة تربح', code: 'C4', tag: 'تحدي ذكاء', desc: 'كوّن صفاً من 4 أقراص متتالية', rules: 'اختر العمود لإسقاط قرصك. الفائز من يجمع 4 أقراص أفقياً أو عمودياً أو قطرياً.' },
-    xo:        { name: 'إكس أو الملكية', code: 'XO', tag: 'مواجهة سريعة', desc: 'تحدى الذكاء الاصطناعي أو صديقك', rules: 'ضع علامتك X لتكوين خط متكامل من 3 خانات قبل خصمك.' },
-    memory:    { name: 'ذاكرة الملوك', code: 'MM', tag: 'تركيز ذهني', desc: 'طابق البطاقات المتشابهة بأقل محاولات', rules: 'اقلب بطاقتين في كل مرة للعثور على الأزواج المتطابقة قبل نفاد المحاولات.' },
-    mines:     { name: 'كاسحة الألغام', code: 'MN', tag: 'مغامرة وحذر', desc: 'اكشف المربعات الآمنة وتجنب الألغام', rules: 'الأرقام تشير لعدد الألغام المجاورة. افتح كافة المربعات الآمنة للفوز.' },
-    snake:     { name: 'الثعبان الذهبي', code: 'SN', tag: 'كلاسيك مطور', desc: 'التهم الكرات الذهبية وضاعف نتيجتك', rules: 'استخدم أزرار التحكم لتوجيه الثعبان نحو الكرات الذهبية دون الاصطدام.' },
-    rps:       { name: 'حجر ورقة مقص', code: 'RP', tag: '3 جولات', desc: 'اقرأ حركة خصمك واحسم المواجهة', rules: 'الحجر يغلب المقص، المقص يغلب الورقة، والورقة تغلب الحجر.' },
-    math:      { name: 'تحدي العباقرة', code: 'MT', tag: 'سرعة حساب', desc: 'حل المعادلات الرياضية بدقة', rules: 'اختر الناتج الصحيح لخمس معادلات متتالية لحسم الجولة.' },
-    guess:     { name: 'الخزنة السرية', code: 'GZ', tag: 'استنتاج', desc: 'اكتشف الرقم السري بين 1 و100', rules: 'أدخل تخمينك وسيوضح لك المؤشر إن كان الرقم السري أعلى أم أدنى.' },
-    simon:     { name: 'سيمون الألوان', code: 'SM', tag: 'ذاكرة بصرية', desc: 'أعد تسلسل الأضواء المضيئة بدقة', rules: 'راقب ترتيب إضاءة اللوحات ثم أعد النقر عليها بنفس الترتيب.' },
-    whack:     { name: 'صائد الجواهر', code: 'JM', tag: 'رد فعل', desc: 'التقط الجواهر الذهبية بسرعة', rules: 'انقر بسرعة على الجواهر التي تظهر على الشبكة للوصول إلى 8 نقاط.' },
-    blackjack: { name: 'بلاك جاك 21', code: '21', tag: 'أوراق ملكية', desc: 'اقترب من 21 دون تجاوزها', rules: 'اسحب أوراقاً لرفع مجموعك قرب 21 دون تجاوزه، ثم توقف لمواجهة الموزع.' },
-    hilo:      { name: 'أعلى أم أدنى', code: 'HL', tag: 'توقع ذكي', desc: 'توقع قيمة البطاقة القادمة', rules: 'انظر للرقم الحالي وتوقع ما إذا كانت البطاقة التالية أعلى أم أدنى.' },
-    hangman:   { name: 'الكلمة المفقودة', code: 'WD', tag: 'ألغاز كلمات', desc: 'خمن حروف الكلمة السرية', rules: 'اختر الحروف العربية لكشف الكلمة السرية قبل نفاد المحاولات.' },
-    tower:     { name: 'برج الذهب', code: 'TW', tag: 'توقيت دقيق', desc: 'أوقف الطابق في المركز المثالي', rules: 'اضغط لإسقاط الطابق المتحرك ضمن النطاق المثالي لبناء 5 طوابق.' }
-};
-
-const AVATARS_SHOP = [
-    { id: 'king', code: 'RG-I', name: 'التاج الملكي', rarity: 'common', price: 0 },
-    { id: 'ninja', code: 'SHD', name: 'ظل النينجا', rarity: 'rare', price: 300 },
-    { id: 'cyber', code: 'CYB', name: 'سايبورغ X', rarity: 'rare', price: 450 },
-    { id: 'dragon', code: 'DRG', name: 'تنين اللهب', rarity: 'epic', price: 900 },
-    { id: 'phoenix', code: 'PHX', name: 'العنقاء الذهبية', rarity: 'epic', price: 1200 },
-    { id: 'emperor', code: 'EMP', name: 'الإمبراطور', rarity: 'legendary', price: 2000 },
-    { id: 'bloodknight', code: 'BLD', name: 'فارس القرمزي', rarity: 'bloody', price: 3500 },
-    { id: 'reaper', code: 'OVR', name: 'سيد الظلال', rarity: 'bloody', price: 4000 }
-];
-
-const THEMES_SHOP = [
-    { id: 'classic', name: 'رخام ملكي', light: '#e2e8f0', dark: '#334155', price: 0 },
-    { id: 'emerald', name: 'زمرد فاخر', light: '#d1fae5', dark: '#065f46', price: 400 },
-    { id: 'royalwood', name: 'خشب الجوز', light: '#fef3c7', dark: '#78350f', price: 600 },
-    { id: 'crimson', name: 'ياقوت قرمزي', light: '#ffe4e6', dark: '#881337', price: 1000 }
-];
-
-let state = {
-    playerId: 'RG-' + Math.floor(1000 + Math.random() * 9000),
-    name: 'اللاعب الملكي',
-    coins: 1000,
-    xp: 0,
-    wins: 0,
-    streak: 0,
-    bestStreak: 0,
-    vip8Wins: 0,
-    isVIP: false,
-    avatarId: 'king',
-    customAvatar: null,
-    unlockedAvatars: ['king'],
-    themeId: 'classic',
-    unlockedThemes: ['classic'],
-    dailyDay: 1,
-    lastDailyDate: '',
-    dailyWins: 0,
-    dailyChessWins: 0,
-    claimedChallenges: []
-};
-
-let selectedGameId = 'chess';
-let selectedDifficulty = 'medium';
-let isBetMatch = false;
-let isVIPMatch = false;
-let vipPot = 1000;
-let vipRound = 1;
-let roundNumber = 1;
-let gameActive = false;
-
-let isPvPMode = false;
-let pvpRoomId = null;
-let pvpRole = null;
-let pvpPollTimer = null;
-let lastSyncMoveSeq = 0;
-let pendingIncomingInvite = null;
-
-function loadState() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) state = Object.assign({}, state, JSON.parse(raw));
-    } catch (e) {}
-}
-
-function saveState() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
-}
-
-function playSound(type) {
-    try {
-        const Ctx = window.AudioContext || window.webkitAudioContext;
-        if (!Ctx) return;
-        const ctx = new Ctx();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        const now = ctx.currentTime;
-        if (type === 'move') { osc.frequency.setValueAtTime(540, now); gain.gain.setValueAtTime(0.07, now); osc.start(now); osc.stop(now + 0.065); }
-        else if (type === 'win') { osc.frequency.setValueAtTime(587.33, now); osc.frequency.setValueAtTime(880, now + 0.11); gain.gain.setValueAtTime(0.11, now); osc.start(now); osc.stop(now + 0.3); }
-        else if (type === 'lose') { osc.frequency.setValueAtTime(293.66, now); osc.frequency.setValueAtTime(196, now + 0.14); gain.gain.setValueAtTime(0.09, now); osc.start(now); osc.stop(now + 0.3); }
-        else { osc.frequency.setValueAtTime(660, now); gain.gain.setValueAtTime(0.05, now); osc.start(now); osc.stop(now + 0.05); }
-    } catch (e) {}
-}
-
-function setElVisible(idOrEl, show) {
-    const el = typeof idOrEl === 'string' ? document.getElementById(idOrEl) : idOrEl;
-    if (!el) return;
-    el.classList.toggle('hidden', !show);
-    el.style.display = show ? '' : 'none';
-}
-
-function showToast(msg) {
-    const el = document.getElementById('toast-msg');
-    if (!el) return;
-    el.textContent = msg;
-    setElVisible(el, true);
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(function () { setElVisible(el, false); }, 3000);
-}
-
-function getRankInfo(xp) {
-    if (xp >= 3000) return { title: 'أسطورة المنصة', level: Math.floor(xp / 250) + 1 };
-    if (xp >= 1500) return { title: 'سيد الاستراتيجية', level: Math.floor(xp / 250) + 1 };
-    if (xp >= 600) return { title: 'محترف متمرس', level: Math.floor(xp / 250) + 1 };
-    return { title: 'مبتدئ', level: Math.floor(xp / 250) + 1 };
-}
-
-function renderGamesCatalog() {
-    const grid = document.getElementById('games-grid');
-    if (!grid) return;
-    const order = ['chess','ludo','connect4','xo','memory','mines','snake','rps','math','guess','simon','whack','blackjack','hilo','hangman','tower'];
-    grid.innerHTML = order.map(function (id) {
-        const g = GAMES_META[id];
-        return '<button type="button" data-action="game" data-val="' + id + '" class="game-tile p-3.5 flex flex-col justify-between gap-2.5 text-right cursor-pointer">' +
-            '<div class="flex items-center justify-between w-full">' +
-                '<span class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400/20 to-amber-600/10 border border-amber-400/35 flex items-center justify-center text-xs font-black text-amber-300 tracking-wider">' + g.code + '</span>' +
-                '<span class="text-[9px] bg-white/5 border border-white/10 text-slate-300 px-2 py-0.5 rounded-full font-bold">' + g.tag + '</span>' +
-            '</div>' +
-            '<div>' +
-                '<div class="text-xs font-black text-white">' + g.name + '</div>' +
-                '<div class="text-[10px] text-slate-400 line-clamp-1 mt-0.5">' + g.desc + '</div>' +
-            '</div>' +
-        '</button>';
-    }).join('');
-}
-
-function updateAllUI() {
-    const rank = getRankInfo(state.xp);
-    document.getElementById('header-name').textContent = state.name;
-    document.getElementById('header-coins').textContent = state.coins.toLocaleString();
-    document.getElementById('header-title').textContent = rank.title;
-    document.getElementById('header-level').textContent = rank.level;
-    document.getElementById('header-vip-badge').classList.toggle('hidden', !state.isVIP);
-
-    const avObj = AVATARS_SHOP.find(function (a) { return a.id === state.avatarId; }) || AVATARS_SHOP[0];
-    const hEmoji = document.getElementById('header-avatar-emoji');
-    const hImg = document.getElementById('header-avatar-img');
-    const pEmoji = document.getElementById('profile-avatar-emoji');
-    const pImg = document.getElementById('profile-avatar-img');
-
-    if (state.customAvatar) {
-        hEmoji.classList.add('hidden');
-        hImg.src = state.customAvatar;
-        hImg.classList.remove('hidden');
-        pEmoji.classList.add('hidden');
-        pImg.src = state.customAvatar;
-        pImg.classList.remove('hidden');
-    } else {
-        hImg.classList.add('hidden');
-        hEmoji.textContent = avObj.code;
-        hEmoji.className = 'text-[10px] font-black text-amber-300';
-        hEmoji.classList.remove('hidden');
-        pImg.classList.add('hidden');
-        pEmoji.textContent = avObj.code;
-        pEmoji.className = 'text-sm font-black text-amber-300';
-        pEmoji.classList.remove('hidden');
-    }
-
-    document.getElementById('profile-name-input').value = state.name;
-    document.getElementById('profile-player-id').textContent = state.playerId;
-    document.getElementById('profile-rank-label').textContent = rank.title;
-    document.getElementById('profile-xp-txt').textContent = state.xp;
-    document.getElementById('profile-xp-bar').style.width = Math.min(100, (state.xp % 250) / 2.5) + '%';
-    document.getElementById('stat-wins').textContent = state.wins;
-    document.getElementById('stat-streak').textContent = state.bestStreak;
-    document.getElementById('stat-vip8').textContent = state.vip8Wins;
-
-    const todayStr = new Date().toDateString();
-    const dailyBtn = document.getElementById('claim-daily-btn');
-    document.getElementById('daily-day-num').textContent = state.dailyDay;
-    if (state.lastDailyDate === todayStr) {
-        dailyBtn.textContent = 'تم الاستلام';
-        dailyBtn.classList.add('opacity-50');
-    } else {
-        const reward = 100 + state.dailyDay * 50;
-        dailyBtn.textContent = 'استلم ' + reward;
-        dailyBtn.classList.remove('opacity-50');
-    }
-
-    if (state.isVIP) {
-        const vBtn = document.getElementById('buy-vip-btn');
-        vBtn.textContent = 'مُفعّل';
-        vBtn.classList.add('opacity-60');
-    }
-
-    renderShop();
-    renderChallenges();
-}
-
-function switchTab(tabName) {
-    ['games', 'arena', 'shop', 'challenges', 'profile'].forEach(function (t) {
-        setElVisible('tab-' + t, t === tabName);
-    });
-    document.querySelectorAll('.nav-btn').forEach(function (btn) {
-        const active = btn.dataset.tab === tabName;
-        btn.classList.toggle('text-amber-400', active);
-        btn.classList.toggle('text-slate-400', !active);
-    });
-    playSound('turn');
-}
-
-function closeModal(id) { setElVisible(id, false); }
-
-function openGameLobby(gId) {
-    selectedGameId = gId || 'chess';
-    isPvPMode = false;
-    pvpRole = null;
-    pvpRoomId = null;
-    isBetMatch = false;
-    isVIPMatch = false;
-    roundNumber = 1;
-
-    const g = GAMES_META[selectedGameId] || GAMES_META.chess;
-    document.getElementById('lobby-icon').textContent = g.code;
-    document.getElementById('lobby-title').textContent = g.name;
-    document.getElementById('lobby-desc').textContent = g.desc;
-    setElVisible('lobby-modal', true);
-    playSound('turn');
-}
-
-function selectDifficulty(diff) {
-    selectedDifficulty = diff;
-    document.querySelectorAll('.diff-btn').forEach(function (btn) {
-        const isSel = btn.dataset.diff === diff;
-        btn.classList.toggle('border-amber-400', isSel);
-        btn.classList.toggle('border-slate-700', !isSel);
-    });
-    playSound('move');
-}
-
-function launchSelectedGame() { closeModal('lobby-modal'); startGameSession(); }
-
-function startBetMatch() {
-    if (state.coins < 100) { showToast('رصيدك غير كافٍ للرهان (تحتاج 100 عملة)'); return; }
-    state.coins -= 100;
-    isBetMatch = true;
-    saveState();
-    updateAllUI();
-    closeModal('lobby-modal');
-    startGameSession();
-}
-
-function enterVIP8Room() {
-    const val = parseInt(document.getElementById('vip-bet-input').value, 10) || 0;
-    if (val < 1000) { showToast('الحد الأدنى لغرفة كبار الشخصيات هو 1,000 عملة'); return; }
-    if (state.coins < val) { showToast('رصيدك الحالي أقل من مبلغ الرهان'); return; }
-    state.coins -= val;
-    saveState();
-    updateAllUI();
-
-    isVIPMatch = true;
-    isPvPMode = false;
-    isBetMatch = false;
-    vipPot = val;
-    vipRound = 1;
-    selectedGameId = 'chess';
-    selectedDifficulty = 'hard';
-    startGameSession();
-}
-
-function openHowToPlay() {
-    const g = GAMES_META[selectedGameId] || GAMES_META.chess;
-    document.getElementById('howto-title').textContent = 'قواعد ' + g.name;
-    document.getElementById('howto-body').textContent = g.rules;
-    setElVisible('howto-modal', true);
-}
-
-function exitArena() {
-    gameActive = false;
-    stopPvPPolling();
-    isPvPMode = false;
-    isVIPMatch = false;
-    switchTab('games');
-}
-
-function restartCurrentRound() {
-    if (isPvPMode) { showToast('لا يمكن إعادة الجولة أثناء التحدي المباشر'); return; }
-    startGameSession();
-}
-
-function surrenderMatch() { if (gameActive) endGameSession(false, 'لقد انسحبت من المواجهة'); }
-
-function nextRoundSameGame() {
-    closeModal('result-modal');
-    if (isVIPMatch) vipRound++; else roundNumber++;
-    startGameSession();
-}
-
-function closeResultAndExit() { closeModal('result-modal'); exitArena(); }
-
-function startGameSession() {
-    switchTab('arena');
-    gameActive = true;
-
-    const g = GAMES_META[selectedGameId] || GAMES_META.chess;
-    document.getElementById('arena-game-title').textContent = g.name;
-
-    const pvpBar = document.getElementById('pvp-status-bar');
-    const vipBar = document.getElementById('vip8-status-bar');
-    pvpBar.classList.add('hidden');
-    vipBar.classList.add('hidden');
-
-    if (isPvPMode) {
-        pvpBar.classList.remove('hidden');
-        document.getElementById('pvp-room-label').textContent = 'غرفة مباشرة #' + pvpRoomId;
-        document.getElementById('arena-sub-info').textContent = pvpRole === 'host' ? 'أنت المضيف (الطرف الأول)' : 'أنت الضيف (الطرف الثاني)';
-        document.getElementById('opp-avatar').textContent = 'P2';
-        document.getElementById('opp-name').textContent = 'الخصم المباشر';
-    } else if (isVIPMatch) {
-        vipBar.classList.remove('hidden');
-        document.getElementById('vip8-round-txt').textContent = vipRound;
-        document.getElementById('vip8-pot-txt').textContent = vipPot.toLocaleString();
-        document.getElementById('arena-sub-info').textContent = 'غرفة VIP • الجولة ' + vipRound + ' من 8';
-        document.getElementById('opp-avatar').textContent = 'VIP';
-        document.getElementById('opp-name').textContent = 'بطل VIP';
-    } else {
-        document.getElementById('arena-sub-info').textContent = 'الجولة ' + roundNumber + ' • مستوى ' + selectedDifficulty;
-        document.getElementById('opp-avatar').textContent = 'AI';
-        document.getElementById('opp-name').textContent = 'الذكاء الاصطناعي';
-    }
-
-    const container = document.getElementById('arena-board-container');
-    container.innerHTML = '';
-
-    if (selectedGameId === 'chess') initChessGame(container);
-    else if (selectedGameId === 'connect4') initConnect4Game(container);
-    else if (selectedGameId === 'xo') initXOGame(container);
-    else if (selectedGameId === 'ludo') initLudoGame(container);
-    else if (selectedGameId === 'memory') initMemoryGame(container);
-    else if (selectedGameId === 'mines') initMinesGame(con
+                      
